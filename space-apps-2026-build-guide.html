@@ -1,0 +1,2691 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Build Guide — NASA Space Apps Challenge 2026 Bangladesh</title>
+<style>
+:root{
+  --ink:#0B1B3A; --ink-2:#12274F; --paper:#EEF1F7; --paper-2:#FFFFFF;
+  --orbit:#0B5FD9; --orbit-soft:#DCE7FA; --amber:#B77400; --amber-soft:#FDF1DA;
+  --alert:#B32D22; --alert-soft:#FBE7E4; --slate:#5A6A85; --rule:#C8D2E4;
+  --sans:system-ui,-apple-system,'Segoe UI',Roboto,'Noto Sans','Noto Sans Bengali','Helvetica Neue',Arial,sans-serif;
+  --serif:Georgia,'Iowan Old Style','Times New Roman','Noto Serif','Noto Serif Bengali',serif;
+  --mono:ui-monospace,'SF Mono',Menlo,Consolas,'Roboto Mono','Courier New',monospace;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --ink:#E6ECF7; --ink-2:#C3D0E6; --paper:#08101F; --paper-2:#0E1B33;
+    --orbit:#6AA6FF; --orbit-soft:#17294A; --amber:#E0A33C; --amber-soft:#2A2113;
+    --alert:#FF8B7E; --alert-soft:#2E1714; --slate:#93A3BF; --rule:#22355A;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --ink:#E6ECF7; --ink-2:#C3D0E6; --paper:#08101F; --paper-2:#0E1B33;
+  --orbit:#6AA6FF; --orbit-soft:#17294A; --amber:#E0A33C; --amber-soft:#2A2113;
+  --alert:#FF8B7E; --alert-soft:#2E1714; --slate:#93A3BF; --rule:#22355A;
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:calc(72px + env(safe-area-inset-top,0px));-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--serif);
+  font-size:17px;line-height:1.62;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4,.ui{font-family:var(--sans);letter-spacing:-0.012em}
+a{color:var(--orbit);text-underline-offset:3px;text-decoration-thickness:1px}
+a:focus-visible,button:focus-visible,select:focus-visible{outline:2px solid var(--orbit);outline-offset:2px;border-radius:2px}
+img{max-width:100%}
+
+/* ---------- hero ---------- */
+.hero{background:var(--ink);color:#EEF1F7;padding:56px 22px 40px;position:relative;overflow:hidden}
+:root[data-theme="dark"] .hero,
+:root:not([data-theme="light"]) .hero{background:#050B17}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]) .hero{background:#0B1B3A}}
+.hero-in{max-width:1180px;margin:0 auto}
+.hero .tagline{font-family:var(--sans);font-weight:600;font-size:13px;color:#8FB6F2;margin:0 0 14px}
+.hero h1{font-size:clamp(30px,5.2vw,58px);line-height:1.04;font-weight:700;margin:0 0 14px;max-width:16ch}
+.hero p.sub{font-size:clamp(16px,2vw,19px);color:#BACCE9;max-width:62ch;margin:0 0 30px}
+.clock{display:flex;flex-wrap:wrap;gap:10px;border-top:1px solid #1E3866;padding-top:22px}
+.tile{background:#101F3D;border:1px solid #23406F;border-radius:3px;padding:10px 16px;min-width:88px}
+.tile b{display:block;font-family:var(--sans);font-size:clamp(22px,4vw,34px);font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
+.tile span{font-family:var(--sans);font-size:11px;color:#8FB6F2;font-weight:500}
+.clock-note{font-family:var(--sans);font-size:13px;color:#8FB6F2;flex:1 1 220px;align-self:center;min-width:200px}
+.railmarks{display:flex;flex-wrap:wrap;gap:0;margin-top:26px;border-top:1px solid #1E3866}
+.mark{flex:1 1 180px;border-right:1px solid #1E3866;padding:14px 16px 4px}
+.mark:last-child{border-right:0}
+.mark b{display:block;font-family:var(--sans);font-size:14px;font-weight:600}
+.mark span{font-family:var(--sans);font-size:12.5px;color:#8FB6F2}
+
+/* ---------- shell ---------- */
+.topbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:40;background:var(--paper);
+  border-bottom:1px solid var(--rule);display:flex;gap:12px;align-items:center;
+  padding:9px 18px;font-family:var(--sans)}
+.topbar .who{font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.topbar .spacer{flex:1}
+.topbar button,.topbar select{font-family:var(--sans);font-size:13px;color:var(--ink);
+  background:var(--paper-2);border:1px solid var(--rule);border-radius:3px;padding:6px 10px;cursor:pointer}
+#jump{display:none;max-width:56vw}
+.shell{max-width:1180px;margin:0 auto;display:flex;gap:34px;padding:26px 22px 90px;align-items:flex-start}
+.rail{width:246px;flex:0 0 246px;position:sticky;top:calc(56px + env(safe-area-inset-top,0px));
+  max-height:calc(100vh - 80px);overflow-y:auto;font-family:var(--sans)}
+.rail h4{font-size:12px;font-weight:600;color:var(--slate);margin:20px 0 7px;letter-spacing:0}
+.rail h4:first-child{margin-top:0}
+.rail a{display:block;color:var(--ink-2);text-decoration:none;font-size:13.5px;padding:5px 9px;
+  border-left:2px solid transparent;border-radius:0 2px 2px 0}
+.rail a:hover{background:var(--orbit-soft)}
+.rail a.on{border-left-color:var(--orbit);color:var(--orbit);font-weight:600;background:var(--orbit-soft)}
+.rail a .n{display:inline-block;width:22px;color:var(--slate);font-variant-numeric:tabular-nums}
+.rail a.on .n{color:var(--orbit)}
+.content{flex:1;min-width:0}
+.page{display:none}
+.page.live{display:block}
+
+/* ---------- typography blocks ---------- */
+.page > h2{font-size:clamp(24px,3.6vw,34px);font-weight:700;margin:0 0 6px;line-height:1.14}
+.page > .lede{color:var(--slate);font-family:var(--sans);font-size:15px;margin:0 0 26px;max-width:70ch}
+h3{font-size:19px;font-weight:600;margin:34px 0 10px}
+h4{font-size:15.5px;font-weight:600;margin:22px 0 6px}
+p{max-width:72ch}
+ul,ol{max-width:72ch;padding-left:20px}
+li{margin:4px 0}
+code{font-family:var(--mono);font-size:.85em;background:var(--orbit-soft);padding:1px 5px;border-radius:2px;
+  word-break:break-word}
+strong{font-weight:600}
+
+/* challenge header */
+.chead{display:flex;gap:18px;align-items:flex-start;border-bottom:2px solid var(--ink);padding-bottom:16px;margin-bottom:20px}
+.chead .num{font-family:var(--sans);font-size:clamp(46px,8vw,86px);font-weight:700;line-height:.82;
+  color:transparent;-webkit-text-stroke:2px var(--rule);flex:0 0 auto;font-variant-numeric:tabular-nums}
+.chead .txt{flex:1;min-width:0}
+.chead h2{margin:0 0 8px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-family:var(--sans);font-size:11.5px;font-weight:500;border:1px solid var(--rule);
+  padding:3px 8px;border-radius:2px;color:var(--slate)}
+.chip.adv{border-color:var(--alert);color:var(--alert)}
+.chip.int{border-color:var(--orbit);color:var(--orbit)}
+.chip.beg{border-color:var(--amber);color:var(--amber)}
+
+/* tabs */
+.tabs{display:flex;flex-wrap:wrap;gap:2px;border-bottom:1px solid var(--rule);margin:0 0 22px}
+.tabs button{font-family:var(--sans);font-size:13.5px;font-weight:500;background:none;border:0;
+  border-bottom:2px solid transparent;color:var(--slate);padding:9px 13px;cursor:pointer;margin-bottom:-1px}
+.tabs button:hover{color:var(--ink)}
+.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--orbit);font-weight:600}
+.panel{display:none}
+.panel.live{display:block}
+
+/* callouts */
+.note{border-left:3px solid var(--orbit);background:var(--paper-2);padding:12px 16px;margin:18px 0;border-radius:0 3px 3px 0}
+.note.warn{border-left-color:var(--amber);background:var(--amber-soft)}
+.note.hard{border-left-color:var(--alert);background:var(--alert-soft)}
+.note p:first-child{margin-top:0}
+.note p:last-child{margin-bottom:0}
+.note b{font-family:var(--sans)}
+
+/* killer demo block — the one loud thing on a challenge page */
+.killer{border:2px solid var(--ink);background:var(--paper-2);padding:18px 20px;margin:20px 0}
+.killer .k{font-family:var(--sans);font-size:12px;font-weight:600;color:var(--orbit);margin:0 0 6px}
+.killer p{font-size:19px;line-height:1.45;margin:0;max-width:60ch}
+
+/* tables */
+.tw{overflow-x:auto;margin:16px 0;border:1px solid var(--rule);border-radius:3px;background:var(--paper-2)}
+table{border-collapse:collapse;width:100%;font-family:var(--sans);font-size:13.5px;min-width:560px}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--rule);vertical-align:top}
+th{font-weight:600;background:var(--orbit-soft);position:sticky;top:0}
+tr:last-child td{border-bottom:0}
+td code{font-size:12px;background:none;padding:0}
+
+/* code */
+.code{position:relative;margin:16px 0}
+.code .cap{font-family:var(--sans);font-size:12.5px;font-weight:600;color:var(--slate);margin-bottom:5px}
+pre{margin:0;background:var(--ink);color:#DCE7FA;border-radius:3px;padding:15px 16px;overflow-x:auto;
+  font-family:var(--mono);font-size:13px;line-height:1.55}
+:root[data-theme="dark"] pre,:root:not([data-theme="light"]) pre{background:#050B17;border:1px solid var(--rule)}
+pre code{background:none;padding:0;font-size:inherit;color:inherit}
+.copy{position:absolute;top:26px;right:8px;font-family:var(--sans);font-size:11.5px;font-weight:600;
+  background:rgba(255,255,255,.12);color:#DCE7FA;border:1px solid rgba(255,255,255,.22);
+  border-radius:3px;padding:4px 9px;cursor:pointer}
+.copy:hover{background:rgba(255,255,255,.22)}
+.copy.done{background:var(--orbit);border-color:var(--orbit);color:#fff}
+
+/* plan grid */
+.plan{border:1px solid var(--rule);border-radius:3px;background:var(--paper-2);overflow:hidden;margin:16px 0}
+.plan .row{display:flex;gap:0;border-bottom:1px solid var(--rule)}
+.plan .row:last-child{border-bottom:0}
+.plan .when{flex:0 0 118px;font-family:var(--sans);font-size:12.5px;font-weight:600;
+  padding:11px 13px;background:var(--orbit-soft);color:var(--ink)}
+.plan .what{flex:1;padding:11px 14px;font-size:15px}
+@media(max-width:560px){.plan .row{flex-direction:column}.plan .when{flex:none}}
+
+.two{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media(max-width:760px){.two{grid-template-columns:1fr}}
+.box{border:1px solid var(--rule);border-radius:3px;background:var(--paper-2);padding:14px 16px}
+.box h4{margin-top:0}
+.box ul{padding-left:18px;margin-bottom:0}
+.box.cut{border-left:3px solid var(--alert)}
+.box.pre{border-left:3px solid var(--amber)}
+
+footer.foot{border-top:1px solid var(--rule);margin-top:40px;padding:26px 22px 60px;font-family:var(--sans);font-size:13px;color:var(--slate)}
+footer.foot .in{max-width:1180px;margin:0 auto}
+
+@media(max-width:920px){
+  .shell{display:block;padding:20px 18px 80px}
+  .rail{display:none}
+  #jump{display:block}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media print{.topbar,.rail,.copy{display:none}.page{display:block!important}.panel{display:block!important}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-in">
+    <p class="tagline">NASA International Space Apps Challenge 2026 · Bangladesh Local Events</p>
+    <h1>The build guide for The Next Frontier</h1>
+    <p class="sub">Everything a Bangladeshi team needs to go from a challenge summary to a judged, open-source, offline-proof project: architecture, real NASA endpoints, runnable code, agent design, MCP servers, skill files, and a 48-hour plan for each of the 14 challenges.</p>
+    <div class="clock">
+      <div class="tile"><b id="d">—</b><span>days</span></div>
+      <div class="tile"><b id="h">—</b><span>hours</span></div>
+      <div class="tile"><b id="m">—</b><span>minutes</span></div>
+      <div class="tile"><b id="s">—</b><span>seconds</span></div>
+      <p class="clock-note" id="cnote">Counting down to 07:00, Friday 13 November 2026 — registration opens at your city venue.</p>
+    </div>
+    <div class="railmarks">
+      <div class="mark"><b>17 Sep 2026</b><span>Challenge summaries live · done</span></div>
+      <div class="mark"><b>1 Oct 2026</b><span>240-second prescreening video due</span></div>
+      <div class="mark"><b>28 Oct 2026</b><span>Full challenge statements and datasets</span></div>
+      <div class="mark"><b>13–14 Nov 2026</b><span>Bangladesh hackathon · global window 14–15</span></div>
+    </div>
+  </div>
+</header>
+
+<div class="topbar">
+  <span class="who ui">Space Apps 2026 · Build Guide</span>
+  <span class="spacer"></span>
+  <select id="jump" aria-label="Jump to a section"></select>
+  <button id="themer" type="button">Dark</button>
+  <button onclick="window.print()" type="button">Print</button>
+</div>
+
+<div class="shell">
+  <nav class="rail" id="rail" aria-label="Guide sections"></nav>
+  <main class="content" id="content">
+
+<!-- ============ BRIEF ============ -->
+<section class="page" id="brief" data-nav="Mission brief" data-group="Start here">
+  <h2>Mission brief</h2>
+  <p class="lede">What is confirmed, what is not, and how to use this guide.</p>
+
+  <p>This is the technical companion to the Participants Guide. The Participants Guide tells you when to show up, what to upload and how you are scored. This one tells you what to build and how to build it so that it still works when the venue wifi dies at 4pm on Saturday.</p>
+
+  <h3>The 2026 challenge list is confirmed</h3>
+  <p>Fourteen challenges are published under the theme <strong>The Next Frontier</strong>. Every title in the draft blueprint set matches the official 2026 list — nothing is a 2025 carry-over, and nothing is missing. Only the <em>summaries</em> are live right now. The full statements, with NASA's own named datasets, publish on <strong>28 October 2026</strong>.</p>
+
+  <div class="note warn">
+    <p><b>Read the year filter.</b> The challenge index defaults to a previous year unless you set <em>Show Challenges From</em> to <em>2026 NASA Space Apps Challenges</em> in the top-right corner. A project built against a 2025 statement is not judged.</p>
+  </div>
+
+  <div class="tw"><table>
+    <thead><tr><th style="width:34px">#</th><th>Official 2026 challenge</th><th>Category</th><th>Level</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>Abandoned but not Forgotten: Storytelling about NASA's Discarded Equipment on the Moon and Mars</td><td>Storytelling &amp; space exploration</td><td>Intermediate · Youth</td></tr>
+      <tr><td>2</td><td>Be an Earth System Trend Detective!</td><td>Earth science &amp; data analysis</td><td>Advanced</td></tr>
+      <tr><td>3</td><td>Build a Junior Astronaut Mission Trainer</td><td>Education &amp; gamification</td><td>Intermediate · Youth</td></tr>
+      <tr><td>4</td><td>CLPS Lunar Mission Browser</td><td>Lunar exploration &amp; software</td><td>Advanced · Intermediate</td></tr>
+      <tr><td>5</td><td>Create Health Monitoring Software for Astronauts on Space Missions</td><td>Health &amp; life support</td><td>Intermediate</td></tr>
+      <tr><td>6</td><td>Dancing with the SARs</td><td>SAR &amp; remote sensing</td><td>Advanced · Intermediate</td></tr>
+      <tr><td>7</td><td>Field Shift: Adapting Farms with NASA Data</td><td>Agriculture &amp; climate adaptation</td><td>Advanced · Intermediate</td></tr>
+      <tr><td>8</td><td>Flame in Freefall: AI-Powered Fire Safety Insights from Microgravity Combustion Data</td><td>AI &amp; microgravity safety</td><td>Advanced · Intermediate</td></tr>
+      <tr><td>9</td><td>Harmonization of MODIS and VIIRS Hot Spots</td><td>Thermal sensing &amp; wildfires</td><td>Advanced · Intermediate</td></tr>
+      <tr><td>10</td><td>Identify Earth Locations that Analog the Permanent Moon Base Locations and Mars</td><td>Planetary science &amp; Earth analogs</td><td>Advanced · Intermediate · Youth</td></tr>
+      <tr><td>11</td><td>Interplanetary Survival Guide: Martian Map</td><td>Mapping &amp; survival science</td><td>Intermediate</td></tr>
+      <tr><td>12</td><td>Planet X and SPHEREx</td><td>Astrophysics &amp; cosmology</td><td>Advanced</td></tr>
+      <tr><td>13</td><td>Space Mission Design Game</td><td>Game development &amp; engineering</td><td>Intermediate · Youth</td></tr>
+      <tr><td>14</td><td>The Earth Information Jukebox</td><td>Audio &amp; multimodal Earth data</td><td>Intermediate · Youth</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>The three sentences that decide your score</h3>
+  <ol>
+    <li><strong>NASA data is the evidence layer, not a decoration.</strong> Relevance asks whether the project is NASA-data-first or NASA-data-added. Name the dataset on camera and in the project page.</li>
+    <li><strong>Deterministic code does the science; the model explains it.</strong> Statistics, geometry, routing, similarity and simulation physics belong in your own code. The language model retrieves, orchestrates, explains and narrates.</li>
+    <li><strong>The demo must run with the wifi off.</strong> Cache everything before the event and record a fallback video.</li>
+  </ol>
+
+  <h3>How to move through this guide</h3>
+  <p>The shared build kit is written once and applies to all fourteen projects — architecture, data access, batch and streaming, APIs, agents, MCP servers, skill files, judging and submission. Then each challenge has its own page with five tabs: the brief and the killer demo, the 48-hour plan, the data, the architecture, and a build prompt you can paste straight into an agent.</p>
+
+  <div class="note hard">
+    <p><b>Three rules that disqualify work.</b> Everything you build during the weekend stays open source — if you name no license, NASA distributes it under Apache&nbsp;2.0. Every source is cited, even the free ones. No recognisable name, voice or likeness of anyone under 18 appears in any video or submission.</p>
+  </div>
+</section>
+
+<!-- ============ ARCHITECTURE ============ -->
+<section class="page" id="arch" data-nav="Shared architecture" data-group="Shared build kit">
+  <h2>Shared architecture</h2>
+  <p class="lede">One platform, fourteen science modules. Build the spine once and swap the middle.</p>
+
+  <pre><code>                          FRONTEND  (static, offline capable)
+              MapLibre GL / deck.gl / Three.js  +  service worker cache
+                                     │
+                                     ▼
+                            APP API  (FastAPI)
+              REST endpoints ── cache: parquet / zarr / COG on disk
+                                     │
+                          agent orchestrator (optional)
+                                     │  tools
+                                     ▼
+                             MCP SERVERS
+        nasa/earthdata-mcp   ·   custom FastMCP   ·   pds-mcp-server
+                                     │
+                                     ▼
+                  DATA ACQUISITION  (pre-event, and live when it can)
+   earthaccess · CMR · Harmony · FIRMS · POWER · asf_search · api.nasa.gov
+   GIBS tiles  · IRSA / SPHEREx · PDS Search · Solar System Treks</code></pre>
+
+  <h3>The layer rule</h3>
+  <p>Read the diagram top to bottom and the discipline falls out of it. The frontend never calls NASA directly. The API layer never calls NASA during a demo — it reads the local cache. The acquisition layer runs before the event and, when the network allows, in the background. Agents sit beside the API and reach data only through tools.</p>
+
+  <h3>Repository layout</h3>
+  <div class="code"><div class="cap">Project skeleton — same for all fourteen</div><pre><code>project/
+├─ LICENSE                 # Apache-2.0 unless you choose another OSI license
+├─ README.md               # what it does, how to run, datasets used
+├─ CLAUDE.md               # project rules for coding agents
+├─ AGENTS.md               # portable agent instructions
+├─ .claude/skills/         # SKILL.md folders (see the Skill files tab)
+├─ .env.example            # EDL_USER, FIRMS_MAP_KEY, NASA_API_KEY, ADS_API_TOKEN
+├─ cache/                  # gitignored: downloaded NASA data
+├─ demo_fixtures/          # committed: the exact bytes your demo needs
+├─ docs/AI_USE.md          # every AI tool, the prompts, and your own work
+├─ src/
+│  ├─ acquire/             # one module per data source
+│  ├─ compute/             # deterministic science — no LLM in here
+│  ├─ agents/              # orchestrator + tool schemas
+│  └─ api/                 # FastAPI app
+└─ web/                    # frontend, builds to static files</code></pre></div>
+
+  <div class="note">
+    <p><b>Why <code>src/compute</code> is a separate folder.</b> It is a physical boundary you can point at during judging. Validity asks whether the method is scientifically grounded. "Our statistics live here, in tested functions, and the model never computes a number" is a twenty-second answer that earns points.</p>
+  </div>
+
+  <h3>The offline demo safety net</h3>
+  <ol>
+    <li>Pre-fetch every demo input into <code>cache/</code> and copy the minimum set into <code>demo_fixtures/</code>.</li>
+    <li>Wrap every fetch: try live, and on timeout or error read the fixture.</li>
+    <li>Add an <code>OFFLINE=1</code> environment flag that forces fixture mode.</li>
+    <li>Pre-render map tiles to a single PMTiles file and serve it locally. Pre-compute charts to static JSON.</li>
+    <li>Rehearse and record the 240-second demo with wifi switched off. That recording is your last line of defence.</li>
+  </ol>
+
+  <div class="code"><div class="cap">src/acquire/safe.py — the wrapper every fetch goes through</div><pre><code>import json, os, pathlib, hashlib, requests
+
+CACHE = pathlib.Path("cache"); CACHE.mkdir(exist_ok=True)
+FIXTURES = pathlib.Path("demo_fixtures")
+OFFLINE = os.getenv("OFFLINE") == "1"
+
+def fetch_json(url, params=None, name=None, timeout=25):
+    """Live first, cache second, committed fixture last. Never raises during a demo."""
+    key = name or hashlib.md5(f"{url}{sorted((params or {}).items())}".encode()).hexdigest()
+    cached = CACHE / f"{key}.json"
+    fixture = FIXTURES / f"{key}.json"
+
+    if not OFFLINE:
+        try:
+            r = requests.get(url, params=params, timeout=timeout)
+            r.raise_for_status()
+            data = r.json()
+            cached.write_text(json.dumps(data))
+            return data, "live"
+        except Exception:
+            pass
+    if cached.exists():
+        return json.loads(cached.read_text()), "cache"
+    if fixture.exists():
+        return json.loads(fixture.read_text()), "fixture"
+    raise FileNotFoundError(f"No live, cache or fixture data for {key}")</code></pre></div>
+  <p>Show the returned source label in the interface. A small "cache" badge next to a number is honest, and judges read it as rigour rather than as a failure.</p>
+</section>
+
+<!-- ============ DATA ============ -->
+<section class="page" id="data" data-nav="Data sources" data-group="Shared build kit">
+  <h2>Data sources</h2>
+  <p class="lede">Verified endpoints, authentication, limits, and what to download before you travel.</p>
+
+  <div class="tw"><table>
+    <thead><tr><th>Source</th><th>Base URL</th><th>Auth</th><th>Limits</th><th>Access</th><th>Cache before the event</th></tr></thead>
+    <tbody>
+      <tr><td>Earthdata Login</td><td><code>urs.earthdata.nasa.gov</code></td><td>Free account, <code>.netrc</code> or bearer token</td><td>—</td><td>Auth for most Earth data</td><td>Make the account now</td></tr>
+      <tr><td>earthaccess</td><td><code>pip install earthaccess</code></td><td>EDL</td><td>—</td><td>Search, download, stream to xarray</td><td>Yes</td></tr>
+      <tr><td>CMR Search</td><td><code>cmr.earthdata.nasa.gov/search</code></td><td>None</td><td>2,000 granules per page</td><td>REST: json, umm_json, echo10</td><td>Metadata only</td></tr>
+      <tr><td>Harmony</td><td><code>harmony.earthdata.nasa.gov</code></td><td>EDL token</td><td>Server-side jobs</td><td>Subset, reproject, reformat</td><td>Yes — subset once</td></tr>
+      <tr><td>AppEEARS</td><td><code>appeears.earthdatacloud.nasa.gov/api/</code></td><td>EDL to bearer</td><td>—</td><td>Point and area sampling</td><td>Yes</td></tr>
+      <tr><td>FIRMS</td><td><code>firms.modaps.eosdis.nasa.gov/api/</code></td><td>Free MAP_KEY</td><td>5,000 transactions per 10 min</td><td>Area CSV API</td><td>Yes — CSV to parquet</td></tr>
+      <tr><td>NASA POWER</td><td><code>power.larc.nasa.gov/api/</code></td><td>None</td><td>Throttled, one request per grid cell</td><td>Daily, hourly, monthly, climatology</td><td>Yes</td></tr>
+      <tr><td>api.nasa.gov</td><td><code>api.nasa.gov</code></td><td><code>api_key</code></td><td>DEMO_KEY 30/hr, 50/day · key 1,000/hr</td><td>APOD, EPIC, NeoWs, Mars Photos</td><td>Yes</td></tr>
+      <tr><td>GIBS</td><td><code>gibs.earthdata.nasa.gov/wmts/</code></td><td>None</td><td>—</td><td>WMTS and WMS tiles</td><td>Yes — to PMTiles</td></tr>
+      <tr><td>ASF (NISAR, Sentinel-1)</td><td><code>api.daac.asf.alaska.edu</code></td><td>EDL to download</td><td>—</td><td>SearchAPI and <code>asf_search</code></td><td>Yes — pull scenes</td></tr>
+      <tr><td>IRSA / SPHEREx</td><td><code>irsa.ipac.caltech.edu</code></td><td>None</td><td>—</td><td>SIA v2, pyvo, astroquery, AWS</td><td>Yes — cutouts</td></tr>
+      <tr><td>PDS Search</td><td><code>pds.nasa.gov/api/search/1/</code></td><td>None</td><td>—</td><td>REST, <code>pds.peppi</code></td><td>Metadata</td></tr>
+      <tr><td>Solar System Treks</td><td><code>trek.nasa.gov/tiles/</code></td><td>None</td><td>—</td><td>WMTS tiles, GetCapabilities</td><td>Yes — tiles</td></tr>
+      <tr><td>WebGeocalc</td><td><code>wgc2.jpl.nasa.gov:8443/webgeocalc/api/</code></td><td>None</td><td>Light use only</td><td>SPICE geometry online</td><td>Use SpiceyPy locally</td></tr>
+      <tr><td>SpiceyPy</td><td><code>pip install spiceypy</code></td><td>None</td><td>—</td><td>Local CSPICE geometry</td><td>Yes — kernels</td></tr>
+      <tr><td>OSDR / GeneLab</td><td><code>osdr.nasa.gov/osdr/data/</code></td><td>None</td><td>—</td><td>REST JSON and CSV</td><td>Yes</td></tr>
+      <tr><td>NTRS</td><td><code>ntrs.nasa.gov/api/</code></td><td>None</td><td>Not published</td><td>Citations, search, PDFs</td><td>Yes — PDFs</td></tr>
+      <tr><td>NASA ADS</td><td><code>api.adsabs.harvard.edu/v1/</code></td><td>Free bearer token</td><td>—</td><td>Literature search</td><td>Metadata</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Three status notes that change what you build</h3>
+  <div class="note warn">
+    <p><b>NISAR L-band is public but provisional.</b> The initial public release began 20 July 2026 and covers observations acquired on or after 17 June 2026; the full science record is expected by the end of 2026. Products are validated at a limited set of sites. Say "provisional" in your interface and in your video.</p>
+  </div>
+  <div class="note warn">
+    <p><b>SPHEREx is on QR2.</b> Public weekly releases through IRSA since July 2025. QR2 supersedes QR1. Cite the release DOI: QR2 is <code>10.26131/IRSA652</code>, QR1 is <code>10.26131/IRSA629</code>.</p>
+  </div>
+  <div class="note warn">
+    <p><b>MODIS and Suomi-NPP are winding down.</b> Suomi-NPP data stops being available from NASA on 1 November 2026, with Terra and Aqua MODIS shutting down from late 2026. Prefer VIIRS on NOAA-20 and NOAA-21 for anything new. This is exactly why challenge 9 exists this year.</p>
+  </div>
+
+  <h3>Partner and local data</h3>
+  <p>Seventeen Space Agency Partners contribute data in 2026, including ESA, JAXA, ISRO, CSA, ASI and KASA. Copernicus and Sentinel data comes through the Copernicus Data Space Ecosystem and AWS; Landsat through USGS EarthExplorer or a STAC client. For Bangladesh framing, add Bangladesh Water Development Board river and flood records and Bangladesh Meteorological Department station data on top of the NASA layer — partner and third-party sources on top of NASA data is what a 5 out of 5 looks like on the NASA data usage criterion.</p>
+
+  <h3>The four datasets most Bangladesh projects will want</h3>
+  <ul>
+    <li><strong>NASA POWER</strong> — no key, small files, decades of daily climate for any point. The fastest path to a defensible trend.</li>
+    <li><strong>FIRMS</strong> — one free key, CSV in, parquet out, immediate fire and burning-season stories.</li>
+    <li><strong>Sentinel-1 GRD through ASF</strong> — radar sees through monsoon cloud, which optical sensors cannot.</li>
+    <li><strong>GIBS tiles</strong> — an instant, credible NASA basemap with no authentication.</li>
+  </ul>
+</section>
+
+<!-- ============ CODE ============ -->
+<section class="page" id="code" data-nav="Acquisition code" data-group="Shared build kit">
+  <h2>Acquisition code</h2>
+  <p class="lede">Paste, run, cache. Every snippet below writes to disk so the second run is free.</p>
+
+  <div class="code"><div class="cap">Earthdata Login and earthaccess</div><pre><code># ~/.netrc  (chmod 600):
+# machine urs.earthdata.nasa.gov login YOUR_USER password YOUR_PASS
+import earthaccess, pathlib
+CACHE = pathlib.Path("cache"); CACHE.mkdir(exist_ok=True)
+
+def login():
+    # reads .netrc, or EARTHDATA_USERNAME / EARTHDATA_PASSWORD, or prompts
+    return earthaccess.login(strategy="netrc")
+
+def search_download(short_name, bbox, temporal, out="cache/data"):
+    login()
+    results = earthaccess.search_data(short_name=short_name,
+        bounding_box=bbox, temporal=temporal, count=20)
+    return earthaccess.download(results, out)   # returns local file paths
+
+# Bangladesh bbox = (88, 20, 93, 27)</code></pre></div>
+
+  <div class="code"><div class="cap">CMR granule search — no authentication, cached</div><pre><code>import requests, json, hashlib, os
+
+def cmr_granules(short_name, bbox, t0, t1, page_size=100):
+    url = "https://cmr.earthdata.nasa.gov/search/granules.json"
+    params = {"short_name": short_name,
+              "bounding_box": f"{bbox[0]},{bbox[1]},{bbox[2]},{bbox[3]}",
+              "temporal": f"{t0},{t1}", "page_size": page_size}   # max 2000
+    key = hashlib.md5(json.dumps(params, sort_keys=True).encode()).hexdigest()
+    fp = f"cache/cmr_{key}.json"
+    if os.path.exists(fp):
+        return json.load(open(fp))
+    r = requests.get(url, params=params, timeout=30); r.raise_for_status()
+    js = r.json(); json.dump(js, open(fp, "w")); return js</code></pre></div>
+
+  <div class="code"><div class="cap">Harmony — subset once, download small</div><pre><code>from harmony import Client, Collection, Request
+
+c = Client()  # EDL token from ~/.netrc or environment
+req = Request(collection=Collection(id="C1234-PROV"),
+              spatial={"bbox": [88, 20, 93, 27]},
+              temporal={"start": "2024-06-01", "stop": "2024-06-30"},
+              format="application/x-netcdf4")
+job = c.submit(req)
+c.wait_for_processing(job, show_progress=True)
+paths = list(c.download_all(job, directory="cache", overwrite=False))</code></pre></div>
+
+  <div class="code"><div class="cap">NASA POWER — daily climate for a point, straight to parquet</div><pre><code>import requests, pandas as pd
+
+def power_daily(lat, lon, start, end,
+                params="T2M,PRECTOTCORR,ALLSKY_SFC_SW_DWN", community="AG"):
+    url = "https://power.larc.nasa.gov/api/temporal/daily/point"
+    q = dict(parameters=params, community=community, latitude=lat, longitude=lon,
+             start=start, end=end, format="JSON")
+    d = requests.get(url, params=q, timeout=60).json()["properties"]["parameter"]
+    df = pd.DataFrame(d); df.index.name = "date"
+    df.to_parquet(f"cache/power_{lat}_{lon}.parquet")
+    return df
+
+# Dhaka, ten years of daily weather in one call:
+# power_daily(23.81, 90.41, "20150101", "20241231")</code></pre></div>
+
+  <div class="code"><div class="cap">FIRMS active fire — Bangladesh box to parquet</div><pre><code>import pandas as pd
+MAP_KEY = "YOUR_FIRMS_MAP_KEY"   # firms.modaps.eosdis.nasa.gov/api/map_key/
+
+def firms_area(sensor="VIIRS_NOAA20_NRT", bbox="88,20,93,27", days=3):
+    """bbox = west,south,east,north. days 1-10. One call is one transaction."""
+    u = f"https://firms.modaps.eosdis.nasa.gov/api/area/csv/{MAP_KEY}/{sensor}/{bbox}/{days}"
+    df = pd.read_csv(u)
+    df.to_parquet("cache/firms.parquet")
+    return df
+
+# Limit: 5,000 transactions per 10 minutes.
+# Prefer VIIRS_NOAA20_NRT or VIIRS_NOAA21_NRT — Suomi-NPP ends 1 Nov 2026.</code></pre></div>
+
+  <div class="code"><div class="cap">api.nasa.gov — APOD, near-Earth objects, Mars imagery</div><pre><code>import requests, os
+KEY = os.getenv("NASA_API_KEY", "DEMO_KEY")
+# DEMO_KEY: 30 requests/hour, 50/day. A free registered key: 1,000/hour.
+
+apod = requests.get("https://api.nasa.gov/planetary/apod",
+                    params={"api_key": KEY}).json()
+
+neo = requests.get("https://api.nasa.gov/neo/rest/v1/feed",
+                   params={"api_key": KEY, "start_date": "2026-11-14",
+                           "end_date": "2026-11-15"}).json()
+
+mars = requests.get("https://api.nasa.gov/mars-photos/api/v1/rovers/perseverance/photos",
+                    params={"api_key": KEY, "earth_date": "2026-09-01"}).json()</code></pre></div>
+
+  <div class="code"><div class="cap">GIBS tiles in MapLibre — no key, instant NASA basemap</div><pre><code>map.addSource('modis', {
+  type: 'raster', tileSize: 256,
+  tiles: ['https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/' +
+          'MODIS_Terra_CorrectedReflectance_TrueColor/default/2024-06-15/' +
+          'GoogleMapsCompatible_Level9/{z}/{y}/{x}.jpg']
+});
+map.addLayer({ id: 'modis', type: 'raster', source: 'modis' });
+
+// Template: /wmts/epsg{EPSG}/best/{Layer}/default/{Time}/{TileMatrixSet}/{z}/{y}/{x}.{ext}
+// Pass an explicit YYYY-MM-DD. The "current" keyword is not supported.</code></pre></div>
+
+  <div class="code"><div class="cap">ASF — Sentinel-1 and NISAR scenes</div><pre><code>import asf_search as asf
+
+res = asf.search(platform=[asf.PLATFORM.SENTINEL1A], processingLevel="GRD_HD",
+                 intersectsWith="POLYGON((88 20,93 20,93 27,88 27,88 20))",
+                 start="2024-06-01", end="2024-07-01", maxResults=10)
+
+session = asf.ASFSession().auth_with_creds("EDL_USER", "EDL_PASS")
+res.download(path="cache/sar", session=session)
+
+# NISAR products are PROVISIONAL — validated at a limited set of sites. Say so.</code></pre></div>
+
+  <div class="code"><div class="cap">SPHEREx through IRSA, PDS, SPICE, OSDR, NTRS, ADS</div><pre><code>from astroquery.ipac.irsa import Irsa
+imgs = Irsa.query_sia(pos=(202.48, 47.23), collection="spherex_qr")   # cite 10.26131/IRSA652
+
+import requests, os
+pds = requests.get("https://pds.nasa.gov/api/search/1/products",
+    params={"limit": 10,
+            "q": '(pds:Primary_Result_Summary.pds:processing_level eq "Raw")'}).json()
+
+import spiceypy as spice
+spice.furnsh("kernels/meta.tm")
+et = spice.str2et("2026-11-14T00:00:00")
+pos, lt = spice.spkpos("MARS", et, "J2000", "NONE", "EARTH")   # geometry, not guesswork
+
+osdr = requests.get("https://osdr.nasa.gov/osdr/data/osd/files/87.1").json()
+
+ntrs = requests.get("https://ntrs.nasa.gov/api/citations/search",
+                    params={"q": "microgravity combustion"}).json()
+
+ads = requests.get("https://api.adsabs.harvard.edu/v1/search/query",
+    headers={"Authorization": f"Bearer {os.getenv('ADS_API_TOKEN')}"},
+    params={"q": "SPHEREx", "fl": "title,bibcode,year", "rows": 10}).json()</code></pre></div>
+
+  <div class="note">
+    <p><b>Keys to collect this week.</b> Earthdata Login account, a FIRMS MAP_KEY, a free api.nasa.gov key, and an ADS token. Put them in <code>.env</code>, commit only <code>.env.example</code>, and test each with a single call before the event.</p>
+  </div>
+</section>
+
+<!-- ============ PIPELINE ============ -->
+<section class="page" id="pipeline" data-nav="Batch and streaming" data-group="Shared build kit">
+  <h2>Batch and streaming</h2>
+  <p class="lede">What to download, what to query live, and which storage format to use for each shape of data.</p>
+
+  <h3>The decision</h3>
+  <div class="two">
+    <div class="box pre">
+      <h4>Download in batch</h4>
+      <ul>
+        <li>Any raster time series</li>
+        <li>Anything over a few hundred megabytes</li>
+        <li>Anything that appears in the demo</li>
+        <li>Anything you will run statistics over more than once</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>Query live</h4>
+      <ul>
+        <li>Small, fresh point queries — POWER for one location</li>
+        <li>Last-24-hour FIRMS for one box</li>
+        <li>A single APOD or NEO call</li>
+        <li>Anything where "right now" is the point of the feature</li>
+      </ul>
+    </div>
+  </div>
+  <p>Every live response still gets written to <code>cache/</code> with a content-hash key. Live and cached are not two modes; live is how the cache gets filled.</p>
+
+  <h3>Storage format by data shape</h3>
+  <div class="tw"><table>
+    <thead><tr><th>Shape of data</th><th>Format</th><th>Read it with</th><th>Why</th></tr></thead>
+    <tbody>
+      <tr><td>Gridded, many time steps</td><td>Zarr</td><td>xarray</td><td>Chunked, lazy, slices by time and space without loading everything</td></tr>
+      <tr><td>Imagery you pan and zoom</td><td>Cloud-optimised GeoTIFF</td><td>rio-tiler or titiler</td><td>Serves tiles from one file, no tile pyramid on disk</td></tr>
+      <tr><td>Points and tables</td><td>Parquet</td><td>DuckDB or pandas</td><td>Columnar, compressed, queryable with SQL and no server</td></tr>
+      <tr><td>Vectors for the map</td><td>GeoParquet then PMTiles</td><td>tippecanoe, MapLibre</td><td>One file, one HTTP range request, works offline</td></tr>
+      <tr><td>Relational with spatial joins</td><td>PostGIS</td><td>psycopg, GeoAlchemy</td><td>Only when you genuinely need joins; otherwise it is a dependency to install at 2am</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="code"><div class="cap">Build the local cache — one script, run it before you travel</div><pre><code># make cache
+import xarray as xr, pandas as pd, duckdb
+
+# 1. Gridded series to zarr, chunked by time
+ds = xr.open_mfdataset("cache/data/*.nc", combine="by_coords")
+ds.sel(lat=slice(20, 27), lon=slice(88, 93)).chunk({"time": 64}) \
+  .to_zarr("cache/bd.zarr", mode="w")
+
+# 2. Point data to parquet, then query it with SQL and no server
+duckdb.sql("""
+  COPY (SELECT * FROM 'cache/firms.parquet' WHERE confidence > 50)
+  TO 'cache/firms_clean.parquet' (FORMAT PARQUET)
+""")
+
+# 3. Precompute the exact series the demo shows — a chart must never wait on a query
+series = (duckdb.sql("SELECT acq_date, count(*) n FROM 'cache/firms_clean.parquet' "
+                     "GROUP BY 1 ORDER BY 1").df())
+series.to_json("web/public/demo_series.json", orient="records")</code></pre></div>
+
+  <div class="code"><div class="cap">Tiles to a single offline file</div><pre><code># Vectors: GeoJSON to PMTiles
+tippecanoe -o web/public/bd.pmtiles -z12 --drop-densest-as-needed cache/features.geojson
+
+# Rasters: a GIBS or Treks region to local tiles, then package
+# (run once, on good internet, before the event)
+python -m src.acquire.tiles --layer MODIS_Terra_CorrectedReflectance_TrueColor \
+  --bbox 88,20,93,27 --zoom 4-9 --date 2024-06-15 --out cache/tiles
+</code></pre></div>
+
+  <h3>Streaming, when you really need it</h3>
+  <p>Only two challenges genuinely want a stream: astronaut health monitoring, where the point is a live vitals feed, and any near-real-time fire view. Use a websocket from FastAPI feeding from a replayed fixture. A replayed fixture looks identical to a live feed on camera and cannot fail.</p>
+
+  <div class="code"><div class="cap">A stream you can trust — replay a fixture at real-time speed</div><pre><code>import asyncio, json
+from fastapi import FastAPI, WebSocket
+
+app = FastAPI()
+FRAMES = json.load(open("demo_fixtures/vitals.json"))   # 600 rows, 1 per second
+
+@app.websocket("/stream")
+async def stream(ws: WebSocket):
+    await ws.accept()
+    for frame in FRAMES:
+        await ws.send_json(frame)
+        await asyncio.sleep(1.0)   # or 0.2 to compress a 10-minute story into 2 minutes</code></pre></div>
+</section>
+
+<!-- ============ AGENTS ============ -->
+<section class="page" id="agents" data-nav="Agentic design" data-group="Shared build kit">
+  <h2>Agentic design</h2>
+  <p class="lede">Agents retrieve, orchestrate, explain and narrate. They do not compute.</p>
+
+  <pre><code>                        ORCHESTRATOR AGENT
+                                │
+        ┌───────────────┬───────┴────────┬────────────────┐
+        ▼               ▼                ▼                ▼
+   retrieval        analysis         narration        provenance
+     agent            agent            agent             agent
+  CMR · FIRMS    calls deterministic  captions and    blocks any claim
+  POWER · PDS    compute tools only   explanations    without a source
+        │               │                                  │
+        ▼               ▼                                  ▼
+   data tools    numpy · xarray · scipy            user-visible output
+                 exposed as tools</code></pre>
+
+  <h3>The boundary, stated plainly</h3>
+  <div class="two">
+    <div class="box">
+      <h4>The model may</h4>
+      <ul>
+        <li>Choose which dataset answers a question</li>
+        <li>Call tools and chain steps</li>
+        <li>Summarise a result in Bangla or English</li>
+        <li>Write the caption under a chart</li>
+        <li>Draft the project page text</li>
+      </ul>
+    </div>
+    <div class="box cut">
+      <h4>The model may not</h4>
+      <ul>
+        <li>Compute a trend, a p-value or a slope</li>
+        <li>Work out Sun or Earth geometry</li>
+        <li>Choose a route or a path cost</li>
+        <li>Score similarity between locations</li>
+        <li>Invent a number that no tool returned</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>Choosing a framework for a two-day build</h3>
+  <div class="tw"><table>
+    <thead><tr><th>Option</th><th>Pick it when</th><th>Cost of being wrong</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Plain state machine or the Claude Agent SDK</strong></td><td>Your flow is retrieve, compute, explain. This is the default for a 48-hour hackathon: fewest moving parts, native MCP, lowest token burn.</td><td>Low. You can always add a graph later.</td></tr>
+      <tr><td><strong>LangGraph</strong></td><td>You need an explicit, checkpointed graph with a human-in-the-loop gate — for example a provenance check that must pass before output is shown.</td><td>Medium. More concepts to learn on the night.</td></tr>
+      <tr><td><strong>CrewAI</strong></td><td>You already know it and the project is narration-heavy with distinct roles.</td><td>Higher token cost. Independent 2026 benchmarks put CrewAI at roughly two to three times LangGraph's token use on comparable workflows, because handovers are decided by model calls rather than in code.</td></tr>
+    </tbody>
+  </table></div>
+  <p>Do not invent a framework on the weekend. For most teams here, a plain state machine plus one MCP server is the choice that finishes.</p>
+
+  <h3>Tool schemas</h3>
+  <div class="code"><div class="cap">src/agents/tools.json — retrieval, deterministic compute, and the gate</div><pre><code>[
+  {
+    "name": "firms_area_query",
+    "description": "Fetch active-fire detections for a bounding box and day range from NASA FIRMS.",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "sensor": {"type": "string",
+                   "enum": ["VIIRS_NOAA20_NRT", "VIIRS_NOAA21_NRT", "MODIS_NRT"]},
+        "bbox": {"type": "string", "description": "west,south,east,north"},
+        "days": {"type": "integer", "minimum": 1, "maximum": 10}
+      },
+      "required": ["sensor", "bbox", "days"]
+    }
+  },
+  {
+    "name": "trend_test",
+    "description": "Deterministic Mann-Kendall test and Theil-Sen slope on a numeric series. The model must never compute this itself.",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "values": {"type": "array", "items": {"type": "number"}},
+        "dates":  {"type": "array", "items": {"type": "string"}}
+      },
+      "required": ["values", "dates"]
+    }
+  },
+  {
+    "name": "cite_check",
+    "description": "Return true only if every numeric claim maps to a dataset id and a source URL.",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "claims": {"type": "array", "items": {
+          "type": "object",
+          "properties": {
+            "text": {"type": "string"},
+            "source_url": {"type": "string"},
+            "dataset_id": {"type": "string"}
+          },
+          "required": ["text", "source_url", "dataset_id"]
+        }}
+      },
+      "required": ["claims"]
+    }
+  }
+]</code></pre></div>
+
+  <div class="code"><div class="cap">src/compute/trend.py — the science, tested and outside the model</div><pre><code>import numpy as np
+from scipy import stats
+
+def mann_kendall(values):
+    """Returns S, Z, p-value and direction. No model involved."""
+    x = np.asarray(values, dtype=float)
+    n = len(x)
+    s = sum(np.sign(x[j] - x[i]) for i in range(n - 1) for j in range(i + 1, n))
+    var = n * (n - 1) * (2 * n + 5) / 18
+    z = (s - np.sign(s)) / np.sqrt(var) if var > 0 else 0.0
+    p = 2 * (1 - stats.norm.cdf(abs(z)))
+    return {"S": float(s), "Z": float(z), "p_value": float(p),
+            "direction": "increasing" if s > 0 else "decreasing" if s < 0 else "none",
+            "significant_at_0.05": bool(p < 0.05)}
+
+def theil_sen(dates_numeric, values):
+    slope, intercept, lo, hi = stats.theilslopes(values, dates_numeric, 0.95)
+    return {"slope_per_unit": float(slope), "intercept": float(intercept),
+            "ci_low": float(lo), "ci_high": float(hi)}</code></pre></div>
+
+  <h3>Stopping the model from making things up</h3>
+  <ol>
+    <li>Every number the model states must come out of a tool result object, never out of prose.</li>
+    <li>A provenance step runs <code>cite_check</code> and blocks any output with a claim missing a source URL and dataset id.</li>
+    <li>The interface has a provenance drawer that shows the raw tool JSON behind each figure. Open it during the demo — it takes ten seconds and it is worth points on validity.</li>
+    <li>Keep a small evaluation set of questions mapped to the tool call you expect, and grade tool-selection accuracy before you ship.</li>
+  </ol>
+
+  <div class="code"><div class="cap">src/agents/loop.py — the whole orchestrator, in one readable function</div><pre><code>import json
+from src.compute import trend
+from src.acquire import safe
+
+TOOLS = {"firms_area_query": ..., "trend_test": trend.mann_kendall}
+
+def run(question, client, tools_spec):
+    messages = [{"role": "user", "content": question}]
+    for _ in range(6):                      # hard step cap: no runaway loops
+        r = client.messages.create(model="claude-sonnet-4-6", max_tokens=1000,
+                                   tools=tools_spec, messages=messages)
+        calls = [b for b in r.content if b.type == "tool_use"]
+        if not calls:
+            return guard(r, messages)       # provenance gate before anything is shown
+        messages.append({"role": "assistant", "content": r.content})
+        results = [{"type": "tool_result", "tool_use_id": c.id,
+                    "content": json.dumps(TOOLS[c.name](**c.input))} for c in calls]
+        messages.append({"role": "user", "content": results})
+    return {"error": "Step limit reached. Showing the last computed result."}
+
+def guard(response, messages):
+    """Every figure in the answer must trace to a tool result already in messages."""
+    ...</code></pre></div>
+</section>
+
+<!-- ============ MCP ============ -->
+<section class="page" id="mcp" data-nav="MCP servers" data-group="Shared build kit">
+  <h2>MCP servers</h2>
+  <p class="lede">Existing servers you can install today, and a complete NASA server you can write in twenty minutes.</p>
+
+  <h3>Servers that already exist</h3>
+  <div class="tw"><table>
+    <thead><tr><th>Server</th><th>What it exposes</th><th>Install</th></tr></thead>
+    <tbody>
+      <tr><td><strong>nasa/earthdata-mcp</strong></td><td>NASA's own CMR server: collections, granules, keywords, services, variables, citations. Streamable HTTP.</td><td>Remote server</td></tr>
+      <tr><td><strong>datalayer/earthdata-mcp-server</strong></td><td>Earthdata discovery with Jupyter integration</td><td><code>docker run datalayer/earthdata-mcp-server:latest</code></td></tr>
+      <tr><td><strong>podaac/cmr-mcp</strong></td><td>CMR through earthaccess</td><td><code>uv</code> project, Claude Desktop config supplied</td></tr>
+      <tr><td><strong>NASA-PDS/pds-mcp-server</strong></td><td>Official Planetary Data System registry. FastMCP, Python 3.13+</td><td>Clone and <code>python src/main.py</code></td></tr>
+      <tr><td><strong>ProgramComputer/NASA-MCP-server</strong></td><td>Twenty-plus NASA APIs in one server</td><td><code>npx @programcomputer/nasa-mcp-server</code></td></tr>
+      <tr><td><strong>eo-mcp</strong></td><td>Copernicus, Landsat, Sentinel-1 and DEMs across clouds</td><td>See repo</td></tr>
+      <tr><td><strong>Official infra servers</strong></td><td>filesystem, fetch, git and GitHub, Postgres and SQLite</td><td><code>modelcontextprotocol/servers</code></td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Your own NASA server</h3>
+  <p>Three tools cover most of what an agent needs on the weekend: fire detections, climate for a point, and a catalogue search. This is the whole server.</p>
+
+  <div class="code"><div class="cap">nasa_tools_mcp.py — pip install "mcp[cli]" fastmcp requests pandas</div><pre><code>from mcp.server.fastmcp import FastMCP
+import requests, os, pandas as pd
+
+mcp = FastMCP("nasa-tools")
+FIRMS_KEY = os.getenv("FIRMS_MAP_KEY", "")
+
+@mcp.tool()
+def firms_fire(sensor: str, bbox: str, days: int = 1) -> list[dict]:
+    """Active fire detections from NASA FIRMS.
+    bbox is 'west,south,east,north'. days is 1 to 10."""
+    u = f"https://firms.modaps.eosdis.nasa.gov/api/area/csv/{FIRMS_KEY}/{sensor}/{bbox}/{days}"
+    return pd.read_csv(u).to_dict(orient="records")
+
+@mcp.tool()
+def power_climate(lat: float, lon: float, start: str, end: str,
+                  parameters: str = "T2M,PRECTOTCORR") -> dict:
+    """NASA POWER daily climate for one point. start and end are YYYYMMDD."""
+    u = "https://power.larc.nasa.gov/api/temporal/daily/point"
+    q = dict(parameters=parameters, community="AG", latitude=lat, longitude=lon,
+             start=start, end=end, format="JSON")
+    return requests.get(u, params=q, timeout=60).json()["properties"]["parameter"]
+
+@mcp.tool()
+def cmr_search(short_name: str, bbox: str, t0: str, t1: str) -> dict:
+    """Search NASA CMR for granules. bbox is 'w,s,e,n'; t0 and t1 are ISO datetimes."""
+    u = "https://cmr.earthdata.nasa.gov/search/granules.json"
+    q = {"short_name": short_name, "bounding_box": bbox,
+         "temporal": f"{t0},{t1}", "page_size": 50}
+    return requests.get(u, params=q, timeout=30).json()
+
+if __name__ == "__main__":
+    mcp.run(transport="stdio")</code></pre></div>
+
+  <div class="code"><div class="cap">claude_desktop_config.json — absolute paths, then restart the client</div><pre><code>{
+  "mcpServers": {
+    "nasa-tools": {
+      "command": "uv",
+      "args": ["--directory", "/ABSOLUTE/PATH/project", "run", "nasa_tools_mcp.py"],
+      "env": { "FIRMS_MAP_KEY": "your_key_here" }
+    }
+  }
+}</code></pre></div>
+
+  <div class="code"><div class="cap">Test it before you rely on it</div><pre><code>npx @modelcontextprotocol/inspector uv run nasa_tools_mcp.py</code></pre></div>
+
+  <div class="note">
+    <p><b>Two things that break MCP setups on the night.</b> Relative paths in the config, and forgetting to restart the client after editing it. Use absolute paths, restart, and confirm the tools appear in the inspector before you write any agent code.</p>
+  </div>
+
+  <h3>The Model Context Protocol itself</h3>
+  <p>Official SDKs exist for Python — <code>pip install "mcp[cli]"</code>, which bundles FastMCP — and TypeScript. FastMCP's decorator pattern shown above is how most Python MCP servers are written. Your tool docstrings become the tool descriptions the model reads, so write them for the model: say what the tool returns, what the units are, and what the arguments mean.</p>
+</section>
+
+<!-- ============ SKILLS ============ -->
+<section class="page" id="skills" data-nav="Skill files" data-group="Shared build kit">
+  <h2>Skill files</h2>
+  <p class="lede">SKILL.md, CLAUDE.md and AGENTS.md — ready to copy into your repository.</p>
+
+  <p>A skill is a folder containing a <code>SKILL.md</code>: YAML frontmatter with a required <code>name</code> and <code>description</code>, optional <code>license</code>, <code>allowed-tools</code> and <code>metadata</code>, then a Markdown body. The folder name must match <code>name</code>. Only the name and description load at startup; the body loads when the skill activates and reference files load only when read, so keep the body short and push detail into reference files beside it.</p>
+
+  <div class="code"><div class="cap">.claude/skills/space-apps-project/SKILL.md</div><pre><code>---
+name: space-apps-project
+description: Scaffold and manage a NASA Space Apps 2026 project. Use when building any of the 14 challenges, wiring the offline-first data cache, or preparing the judging submission.
+license: Apache-2.0
+metadata:
+  author: SpaceApps-Bangladesh
+  version: "1.0"
+---
+
+# Space Apps 2026 project
+
+## When to use
+Any Space Apps 2026 build. Enforces offline-first caching, cited data, an OSI
+license, no under-18 likeness, and AI-use disclosure.
+
+## Steps
+1. Create the repo with LICENSE (Apache-2.0), README, cache/, demo_fixtures/,
+   src/{acquire,compute,agents,api}, web/, docs/AI_USE.md.
+2. Wire data through the nasa-data-access skill. Write every response to cache/.
+3. Keep deterministic science in src/compute. Agents orchestrate and explain only.
+4. Before the demo, run with OFFLINE=1 and record a 240-second video.
+5. Fill the NASA project page using the judging-ready-submission skill.
+
+## Guardrails
+- Cite every dataset with an id and a URL.
+- Name every AI tool used and record the prompts in docs/AI_USE.md.
+- The repository must be public and openly licensed.</code></pre></div>
+
+  <div class="code"><div class="cap">.claude/skills/nasa-data-access/SKILL.md</div><pre><code>---
+name: nasa-data-access
+description: Access NASA and partner data — earthaccess, CMR, Harmony, FIRMS, POWER, api.nasa.gov, GIBS, ASF, IRSA, PDS, Treks, OSDR, NTRS, ADS — with caching and offline fallback. Use whenever the project needs NASA data.
+allowed-tools: Read, Bash
+license: Apache-2.0
+---
+
+# NASA data access
+
+Use the verified endpoints in reference/endpoints.md and the working snippets in
+reference/snippets.py. Do not invent base URLs.
+
+## Rules
+- Cache first: try live, fall back to cache, then to demo_fixtures.
+- Never let a demo depend on the network. Support OFFLINE=1.
+- Keys live in .env and are never committed. Commit .env.example only.
+- Record the dataset id and source URL alongside every value you store.
+
+## Status notes to repeat in the interface
+- NISAR L-band products are PROVISIONAL, validated at a limited set of sites.
+- SPHEREx current release is QR2 — cite DOI 10.26131/IRSA652.
+- Suomi-NPP ends 1 November 2026. Prefer VIIRS on NOAA-20 and NOAA-21.</code></pre></div>
+
+  <div class="code"><div class="cap">.claude/skills/evidence-provenance/SKILL.md</div><pre><code>---
+name: evidence-provenance
+description: Attach a dataset id and source URL to every numeric claim and validate citations before any agent output is shown to a user. Use whenever an agent explains or narrates a result.
+allowed-tools: Read
+license: Apache-2.0
+---
+
+# Evidence and provenance
+
+Every stated number must originate from a tool-result object carrying source_url
+and dataset_id. Run cite_check before display and block output when a claim has
+no source. Render the raw tool JSON in a provenance drawer in the interface.
+
+## Wording rules
+- Report what was measured, not what it means: "rainfall declined 12 percent
+  over 2001 to 2025, Mann-Kendall p = 0.01" rather than "the climate is drying".
+- State the processing level and any provisional status.
+- Never smooth over a gap in the record. Say the record has a gap.</code></pre></div>
+
+  <div class="code"><div class="cap">.claude/skills/judging-ready-submission/SKILL.md</div><pre><code>---
+name: judging-ready-submission
+description: Map the build to the NASA project-page fields and the Bangladesh score sheet, and verify the OSI license, AI disclosure, references and public repository. Use before submitting.
+license: Apache-2.0
+---
+
+# Judging-ready submission
+
+Produce, in this order:
+1. High-Level Summary — what it is, who it helps, how it works, with the
+   240-second video link and the GitHub link.
+2. Project Demo — the 30-second video for global judging.
+3. Project Details — the why/what/how, community involvement, tools used.
+4. GitHub or Drive access — public, tested in a private browser window.
+5. Use of AI — every tool named, prompts explained, your own work shown.
+6. NASA data sources used — each dataset, what it was used for, and how.
+7. References — every source, paper, dataset, library and asset.
+
+Then check score-sheet coverage: Impact, Creativity, Validity, Relevance and
+Presentation at 1-20 each; Teamwork, User experience and NASA data usage at 1-5;
+challenge category named, repository open, project page submitted at 0 or 1 each.</code></pre></div>
+
+  <div class="code"><div class="cap">Per-challenge skill — one folder each, this is the template</div><pre><code>---
+name: challenge-09-modis-viirs-harmonization
+description: Build the MODIS and VIIRS hotspot harmonization project. Use for challenge 9 — reconcile cross-sensor fire detections and build a harmonized burning-activity calendar.
+license: Apache-2.0
+---
+
+# Challenge 9 — Harmonization of MODIS and VIIRS hot spots
+
+Ask: reconcile 1 km MODIS against 375 m VIIRS so that post-2012 detection counts
+are not spuriously inflated by the finer sensor.
+
+Data: FIRMS area API for MODIS and for VIIRS on NOAA-20 and NOAA-21.
+Deterministic: spatial clustering of overlapping detections within ~5.5 km cells,
+implemented in src/compute/harmonize.py.
+
+Killer demo: toggle raw against harmonized over Bangladesh, 2003 to 2026, and
+watch the false step change at the sensor transition disappear.
+
+Cut when behind: one region, one year, static parquet, no live query.</code></pre></div>
+
+  <div class="code"><div class="cap">CLAUDE.md — repository root</div><pre><code># CLAUDE.md
+
+This is a NASA Space Apps 2026 project built at a Bangladesh Local Event.
+
+## Non-negotiables
+- Offline-first. Read from cache/. Wrap live calls with a fixture fallback.
+  Support OFFLINE=1.
+- Deterministic science — statistics, geometry, routing, physics — lives in
+  src/compute and is never performed by the model.
+- Cite every dataset with an id and a URL.
+- Record every AI tool and key prompt in docs/AI_USE.md.
+- Apache-2.0 license. Public repository. No under-18 likenesses anywhere.
+
+## Commands
+- make cache   # pre-fetch every demo input
+- make demo    # run the app with OFFLINE=1
+- make test    # tool-selection evaluation and cite_check
+
+## Style
+- Python: type hints, small pure functions in src/compute, pytest for the science.
+- Frontend: no build step you cannot rerun on a laptop with no internet.</code></pre></div>
+
+  <div class="code"><div class="cap">AGENTS.md — portable across agent tools</div><pre><code># AGENTS.md
+
+Agents may: search catalogues (CMR, PDS, ADS, NTRS), fetch data (FIRMS, POWER,
+earthaccess, ASF, IRSA), orchestrate steps, and explain or narrate results.
+
+Agents may not: compute statistics, geometry, routing or physics themselves.
+Call the functions in src/compute instead.
+
+Every claim needs a source_url and a dataset_id, or the evidence-provenance
+check blocks it. If a tool fails, say so and show the cached value with its
+timestamp. Do not estimate a missing number.</code></pre></div>
+
+  <div class="note">
+    <p><b>Sharing skills with your team.</b> Commit <code>.claude/skills/</code> to the repository, or zip a skill folder and hand it over. The Agent Skills format is an open standard, so the same folder works across Claude, Codex, Copilot, Cursor, Gemini CLI and Goose.</p>
+  </div>
+</section>
+
+<!-- ============ JUDGING ============ -->
+<section class="page" id="judging" data-nav="Judging and submission" data-group="Shared build kit">
+  <h2>Judging and submission</h2>
+  <p class="lede">Where the points are, and the three cheapest ones that teams still lose.</p>
+
+  <h3>The score sheet</h3>
+  <div class="tw"><table>
+    <thead><tr><th>Criterion</th><th>Points</th><th>What earns the top band</th></tr></thead>
+    <tbody>
+      <tr><td>Impact</td><td>1–20</td><td>A major problem, a plausible path to scale, measurable outcomes. Bangladesh framing — flood, river erosion, agriculture, heat, air quality, fire — puts real numbers behind this.</td></tr>
+      <tr><td>Creativity</td><td>1–20</td><td>A bold idea or an unexpected connection. One surprising visual or interaction carries this.</td></tr>
+      <tr><td>Validity</td><td>1–20</td><td>Validated data and methods, a working prototype, tested usability. Your <code>src/compute</code> boundary and provenance drawer are the argument.</td></tr>
+      <tr><td>Relevance</td><td>1–20</td><td>NASA data central and used creatively, not merely cited. Name the dataset on camera.</td></tr>
+      <tr><td>Presentation</td><td>1–20</td><td>A clear beginning, middle and end in clear English, understood in 240 seconds by a global audience.</td></tr>
+      <tr><td>Teamwork</td><td>1–5</td><td>Genuine collaboration, visible in roles and commits.</td></tr>
+      <tr><td>User experience</td><td>1–5</td><td>Anyone can use it without training.</td></tr>
+      <tr><td>NASA data usage</td><td>1–5</td><td>NASA open data plus another agency or third-party source, clearly shown.</td></tr>
+      <tr><td>Challenge category named</td><td>0 or 1</td><td>State the 2026 challenge on the project page.</td></tr>
+      <tr><td>Repository access</td><td>0 or 1</td><td>The link opens for a stranger with no login.</td></tr>
+      <tr><td>Project page complete</td><td>0 or 1</td><td>Every field filled and the page submitted.</td></tr>
+      <tr><td>Women participation bonus</td><td>+5%</td><td>Applied to the aggregate for teams with one or more women members.</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="note hard">
+    <p><b>Secure the three single points first.</b> Category named, public repository, page submitted. They cost fifteen minutes and are the points teams most often throw away while polishing a feature nobody will see.</p>
+  </div>
+
+  <h3>The project page, field by field</h3>
+  <div class="tw"><table>
+    <thead><tr><th>Field</th><th>What to put in it</th></tr></thead>
+    <tbody>
+      <tr><td>High-Level Summary</td><td>The project name, what you built, who it helps, how it works. Include the 240-second video link and the GitHub link here.</td></tr>
+      <tr><td>Project Demo</td><td>The 30-second video. A seven-slide deck is NASA's accepted alternative, but the video travels further.</td></tr>
+      <tr><td>Final Project</td><td>The detail — repository, Figma, full documentation.</td></tr>
+      <tr><td>Project Details</td><td>Three blocks: the why, what and how with every dataset listed; community involvement and highlighted features; tools and technologies with credit given generously.</td></tr>
+      <tr><td>GitHub or Drive access</td><td>Open and public, no permission request. Test it in a private window before you submit.</td></tr>
+      <tr><td>Use of AI</td><td>Every AI tool named, the prompts and reasoning behind them, and the data the AI worked on.</td></tr>
+      <tr><td>NASA data sources used</td><td>Every NASA and partner dataset, what you used it for and how. Judges check this against your claims.</td></tr>
+      <tr><td>References</td><td>Every source, paper, dataset, library and asset you drew on.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Your three videos</h3>
+  <div class="plan">
+    <div class="row"><div class="when">1 Oct, 11:59pm</div><div class="what"><strong>240-second prescreening.</strong> Team name, every member by name, the problem and challenge statement, and the solution approach as a concept. Built from the summaries, because full statements do not land until 28 October.</div></div>
+    <div class="row"><div class="when">Day one, 6:30pm</div><div class="what"><strong>240-second local judging.</strong> The same pitch with the demo dropped in and your NASA datasets named out loud on camera. Confirm the exact date with your Local Lead — the run of show and the form differ.</div></div>
+    <div class="row"><div class="when">14 Nov, 12:00pm</div><div class="what"><strong>30-second global.</strong> Team, problem, the thing working, NASA data usage, impact. English subtitles required. This is all a NASA judge on the other side of the world will see.</div></div>
+  </div>
+
+  <h3>The AI disclosure</h3>
+  <p>AI-generated content is allowed with conditions: you need a valid reason for using it, you must explain your prompts, and you must show where your own creative work went. Unexplained generated content is not acceptable and every generating tool must be named. The detailed submission and judging guides publish on 13 November 2026 — read them that morning and match their wording. Keep <code>docs/AI_USE.md</code> current as you build rather than writing it at midnight on Saturday.</p>
+
+  <div class="code"><div class="cap">docs/AI_USE.md — keep it as you go</div><pre><code># Use of AI in this project
+
+## Tools
+- Claude (Sonnet 4.6) via Claude Code — scaffolding, refactoring, docstrings.
+- Claude via the Anthropic API — the in-app explanation agent (see src/agents/).
+
+## What the AI did
+- Generated the first draft of src/api/routes.py and the MapLibre layer setup.
+- Writes the plain-language caption under each chart at runtime, from tool
+  results only. Prompts are in src/agents/prompts/.
+
+## What the AI did not do
+- All statistics in src/compute are ours, written and unit-tested by the team.
+- The dataset selection, the harmonization method and the interface design are ours.
+
+## Prompts
+Full prompt texts: src/agents/prompts/*.md and docs/prompts_used.md.</code></pre></div>
+</section>
+
+<!-- ============ TIMELINE ============ -->
+<section class="page" id="timeline" data-nav="Run-up plan" data-group="Shared build kit">
+  <h2>Run-up plan</h2>
+  <p class="lede">From today to submission, with the moment each decision has to be made.</p>
+
+  <div class="plan">
+    <div class="row"><div class="when">This week</div><div class="what">Every team member registers an Earthdata Login account and collects a FIRMS MAP_KEY, a free api.nasa.gov key and an ADS token. Test each with a single call. Fork the repository template with <code>CLAUDE.md</code>, <code>AGENTS.md</code> and the skill folders already in it.</div></div>
+    <div class="row"><div class="when">By 1 Oct</div><div class="what">Shortlist two or three challenges from the summaries. Record and upload the 240-second prescreening video — concept only is what the form asks for at this stage.</div></div>
+    <div class="row"><div class="when">28 Oct</div><div class="what">Full challenge statements land. In one sitting, compare NASA's named datasets against the recommendations in this guide, update your data plan and lock scope. If NASA names a dataset you have not cached, caching it is that day's only job.</div></div>
+    <div class="row"><div class="when">2–12 Nov</div><div class="what">Pre-build <code>cache/</code> and <code>demo_fixtures/</code>. Wire one MCP server and the relevant skill. Rehearse the demo with wifi disabled. The deadline that matters: a full dry run must succeed offline by 12 November.</div></div>
+    <div class="row"><div class="when">13 Nov</div><div class="what">Global Offers, the Project Submission Guide and the Judging &amp; Awards Guide all publish. Claim any free credits and align your AI-disclosure text with the official wording.</div></div>
+    <div class="row"><div class="when">Day one</div><div class="what">Follow the challenge's 48-hour plan. Registration 07:00, opening ceremony 10:30, first mentor round 11:30. The 240-second local judging upload is due at 18:30.</div></div>
+    <div class="row"><div class="when">Day two, noon</div><div class="what">Freeze features. The last four hours are for the videos, the project page and the public repository — nothing else. If the killer demo is not reproducible offline by now, ship the fixture version and say so.</div></div>
+  </div>
+
+  <h3>What to do when you are behind</h3>
+  <p>Every challenge page has a cut list. The order is always the same: drop the geographic scope first, then the time range, then the interactivity, then the live query. Keep the killer demo moment intact to the very end — it is the only thing a judge will remember, and a project that does one thing convincingly outscores one that half-does five.</p>
+
+  <div class="note">
+    <p><b>Caveats worth repeating.</b> Only the challenge summaries are live; the dataset recommendations in this guide are ours, not NASA's, until 28 October. NISAR products are provisional. SPHEREx is on QR2. Suomi-NPP ends 1 November 2026. The AI-disclosure wording is not yet in the legal terms — the detailed guides publish 13 November. Verify every date at spaceappschallenge.org before you rely on it.</p>
+  </div>
+</section>
+
+<!-- ============ CHALLENGE 1 ============ -->
+<section class="page" id="c01" data-nav="Abandoned but not Forgotten" data-group="The 14 challenges" data-num="01">
+  <div class="chead"><div class="num">01</div><div class="txt">
+    <h2>Abandoned but not Forgotten</h2>
+    <div class="chips"><span class="chip">Storytelling &amp; space exploration</span><span class="chip int">Intermediate</span><span class="chip beg">Youth</span></div>
+  </div></div>
+  <div class="tabs" role="tablist"></div>
+
+  <div class="panel live" data-label="Brief">
+    <h3>What the challenge asks</h3>
+    <p>Build a creative narrative that brings to life the equipment NASA has left behind on the Moon and Mars. Descent stages, retired rovers, jettisoned heat shields, landers that went quiet — hardware that stopped working but did not stop meaning something.</p>
+    <h3>The build</h3>
+    <p>An interactive map and timeline of discarded NASA hardware, on real Moon and Mars basemaps, where every object carries its mission, its last contact, its coordinates and a citation. Not a slideshow about abandoned robots: a map you can fly around, where the provenance is visible next to the story.</p>
+    <div class="killer"><p class="k">Killer demo</p><p>Click a point on the lunar surface. The Apollo 11 descent stage opens with its coordinates, its final photograph, the date contact ended, and a one-line link back to the NASA source it came from.</p></div>
+    <h3>Where the points are</h3>
+    <p>This is a storytelling challenge, so Presentation and Creativity carry it. Protect Relevance by making the NASA source visible for every object rather than letting the narrative float free of the data. A Bangla language toggle is a cheap, honest win on user experience and reach.</p>
+  </div>
+
+  <div class="panel" data-label="48-hour plan">
+    <div class="plan">
+      <div class="row"><div class="when">Before the event</div><div class="what">Curate the object list offline: name, mission, coordinates, end date, image URL, source URL. Twenty objects is plenty. Cache Moon and Mars basemap tiles to PMTiles.</div></div>
+      <div class="row"><div class="when">Day 1 morning</div><div class="what">Lock the data model and load the GeoJSON. Get a Moon basemap rendering with markers by lunch — that single screenshot de-risks the whole weekend.</div></div>
+      <div class="row"><div class="when">Day 1 afternoon</div><div class="what">Build the object panel and the timeline scrubber. Wire the 11:30 mentor round around your narrative structure, not your code.</div></div>
+      <div class="row"><div class="when">Day 1 evening</div><div class="what">Write three to five objects in full, with real copy. Record the 240-second local judging video by 18:30.</div></div>
+      <div class="row"><div class="when">Day 2 morning</div><div class="what">Polish transitions, add the Bangla toggle, test on a phone. Fill the project page while you still have energy.</div></div>
+      <div class="row"><div class="when">Day 2 noon</div><div class="what">Freeze. Record the 30-second global video, push the repository, submit.</div></div>
+    </div>
+    <div class="two">
+      <div class="box pre"><h4>Pre-build before you travel</h4><ul><li>Curated object GeoJSON with citations</li><li>Moon and Mars tiles as PMTiles</li><li>Images downloaded locally, credited</li></ul></div>
+      <div class="box cut"><h4>Cut in this order</h4><ul><li>Fewer objects, told better</li><li>Timeline becomes a static list</li><li>Moon only, drop Mars</li><li>Static basemap image instead of tiles</li></ul></div>
+    </div>
+  </div>
+
+  <div class="panel" data-label="Data">
+    <ul>
+      <li><strong>NASA Solar System Treks</strong> — Moon Trek and Mars Trek WMTS tiles for the basemap. No authentication.</li>
+      <li><strong>api.nasa.gov</strong> — Mars Rover Photos for rover imagery, APOD for hero images.</li>
+      <li><strong>PDS Search API and NSSDCA</strong> — mission and spacecraft metadata with stable identifiers.</li>
+      <li><strong>NTRS</strong> — mission reports for the dates and the science each object enabled.</li>
+    </ul>
+    <div class="code"><div class="cap">One object record — every field earns its place</div><pre><code>{
+  "id": "apollo11-lm-descent",
+  "name": "Eagle descent stage",
+  "mission": "Apollo 11",
+  "body": "moon",
+  "lat": 0.67408, "lon": 23.47297,
+  "left_behind": "1969-07-21",
+  "last_contact": "1969-07-21",
+  "why_left": "The ascent stage used it as a launch platform and lifted off without it.",
+  "science_enabled": "Passive seismic and laser ranging experiments deployed beside it.",
+  "image": "local/apollo11_lm.jpg",
+  "image_credit": "NASA",
+  "source_url": "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1969-059C",
+  "dataset_id": "NSSDCA 1969-059C"
+}</code></pre></div>
+  </div>
+
+  <div class="panel" data-label="Architecture">
+    <pre><code>curated objects.geojson  ──┐
+Treks WMTS tiles ──► PMTiles │
+NASA images ──► local/       │
+                             ▼
+                     static web app
+                  MapLibre + timeline
+                             │
+                   ┌─────────┴─────────┐
+                   ▼                   ▼
+             object panel         citation line
+           story, image, date     source + dataset id</code></pre>
+    <p>No backend. The whole thing is static files, which means it deploys anywhere, loads on a weak connection, and cannot fail because a server did not start.</p>
+  </div>
+
+  <div class="panel" data-label="Build prompt">
+    <div class="code"><div class="cap">Paste into your coding agent</div><pre><code>Build a static scrollytelling web app about NASA hardware left behind on the
+Moon and Mars.
+
+Data: a curated GeoJSON at data/objects.geojson where each feature has name,
+mission, body, lat, lon, left_behind, last_contact, why_left, science_enabled,
+image (a local path), image_credit, source_url and dataset_id.
+
+Map: MapLibre GL with a local PMTiles basemap for each body, switched by a
+Moon/Mars toggle. Markers for every object; clicking one opens a side panel with
+the story, the local image with its credit, and a visible citation line showing
+source_url and dataset_id.
+
+Add a timeline scrubber that filters objects by the year they were left behind.
+Add an English/Bangla language toggle reading from data/strings.json.
+
+Constraints: no build step that needs the internet; every asset local; keyboard
+accessible; works at 360px wide; respects prefers-reduced-motion; Apache-2.0
+LICENSE; README listing every NASA source used.</code></pre></div>
+  </div>
+</section>
+
+<!-- ============ CHALLENGE 2 ============ -->
+<section class="page" id="c02" data-nav="Earth System Trend Detective" data-group="The 14 challenges" data-num="02">
+  <div class="chead"><div class="num">02</div><div class="txt">
+    <h2>Be an Earth System Trend Detective!</h2>
+    <div class="chips"><span class="chip">Earth science &amp; data analysis</span><span class="chip adv">Advanced</span></div>
+  </div></div>
+  <div class="tabs" role="tablist"></div>
+
+  <div class="panel live" data-label="Brief">
+    <h3>What the challenge asks</h3>
+    <p>Identify, visualise and explain environmental and climate trends in Earth-observation data. The word that matters is <em>trend</em>: not a pretty time series, but a claim about direction, magnitude and significance.</p>
+    <h3>The build</h3>
+    <p>A trend investigation tool for Bangladesh. Pick a district and a variable — land surface temperature, rainfall, vegetation — and the tool runs a real Mann-Kendall test and a Theil-Sen slope over two decades of NASA data, then explains the result in plain language with the statistics attached.</p>
+    <div class="killer"><p class="k">Killer demo</p><p>Two districts side by side. One shows rising temperature with p = 0.003; the other shows no significant trend at all. The explanation says so honestly, and the provenance drawer shows the dataset and the raw numbers behind both.</p></div>
+    <h3>Where the points are</h3>
+    <p>Validity is the whole challenge. A tested statistical function and a visible p-value beat a smooth animation. The judges' question for this criterion is whether it would work if deployed tomorrow — so show the test, the confidence interval, and the gaps in the record.</p>
+  </div>
+
+  <div class="panel" data-label="48-hour plan">
+    <div class="plan">
+      <div class="row"><div class="when">Before the event</div><div class="what">Download POWER daily series for eight district centroids, 2001 to 2025, and one gridded product through earthaccess or AppEEARS. Write them to parquet and zarr. This is a few hundred megabytes at most.</div></div>
+      <div class="row"><div class="when">Day 1 morning</div><div class="what">Load the cache, confirm the series are clean, and write the trend functions with unit tests. Science first, interface second.</div></div>
+      <div class="row"><div class="when">Day 1 afternoon</div><div class="what">Build the map, the district selector and the chart. Show a real p-value on screen by the 15:00 mentor round.</div></div>
+      <div class="row"><div class="when">Day 1 evening</div><div class="what">Add the comparison view and the provenance drawer. Record the 240-second video by 18:30.</div></div>
+      <div class="row"><div class="when">Day 2 morning</div><div class="what">Wire the explanation agent — narration only, reading tool results. Add the cite_check gate.</div></div>
+      <div class="row"><div class="when">Day 2 noon</div><div class="what">Freeze, record the 30-second video, submit.</div></div>
+    </div>
+    <div class="two">
+      <div class="box pre"><h4>Pre-build</h4><ul><li>POWER parquet for every district</li><li>One gridded variable as zarr</li><li>Trend functions with tests passing</li></ul></div>
+      <div class="box cut"><h4>Cut in this order</h4><ul><li>One variable instead of three</li><li>One district instead of eight</li><li>Drop the agent, keep static explanations</li><li>Chart only, no map</li></ul></div>
+    </div>
+  </div>
+
+  <div class="panel" data-label="Data">
+    <ul>
+      <li><strong>NASA POWER</strong> — daily temperature, precipitation and solar radiation for any point, no key, decades deep. Your fastest defensible series.</li>
+      <li><strong>MODIS and VIIRS land surface temperature and NDVI</strong> — through earthaccess or AppEEARS area sampling.</li>
+      <li><strong>IMERG</strong> — gridded precipitation for the monsoon story.</li>
+      <li><strong>GRACE and GRACE-FO</strong> — groundwater and total water storage, which is a strong Bangladesh angle.</li>
+    </ul>
+    <div class="code"><div class="cap">The result object your interface renders</div><pre><code>{
+  "district": "Rajshahi",
+  "variable": "T2M",
+  "period": "2001-01-01 to 2025-12-31",
+  "n_observations": 9131,
+  "trend": {"S": 41230, "Z": 3.61, "p_value": 0.0003,
+            "direction": "increasing", "significant_at_0.05": true},
+  "slope": {"slope_per_year": 0.031, "ci_low": 0.014, "ci_high": 0.048,
+            "units": "degC per year"},
+  "provenance": {"dataset_id": "NASA POWER daily point",
+                 "source_url": "https://power.larc.nasa.gov/api/temporal/daily/point",
+                 "retrieved": "2026-11-02T09:14:00Z", "mode": "cache"}
+}</code></pre></div>
+  </div>
+
+  <div class="panel" data-label="Architecture">
+    <pre><code>POWER / MODIS / IMERG / GRACE
+             │  (pre-event)
+             ▼
+    cache: parquet + zarr
+             │
+             ▼
+   src/compute/trend.py          ◄── tested, deterministic, no model
+   Mann-Kendall · Theil-Sen · CI
+             │
+             ▼
+        FastAPI /trend
+             │
+   ┌─────────┴──────────┐
+   ▼                    ▼
+map + chart        narration agent
+                   (explains only)
+   │                    │
+   └────────┬───────────┘
+            ▼
+    provenance drawer</code></pre>
+  </div>
+
+  <div class="panel" data-label="Build prompt">
+    <div class="code"><div class="cap">Paste into your coding agent</div><pre><code>Build an offline-first Earth-system trend investigation tool for Bangladesh.
+
+Data layer: read pre-cached NASA POWER daily series (parquet, one file per
+district centroid) and one gridded variable (zarr). Never call the network
+during a request; add an OFFLINE=1 mode that forces cache reads.
+
+Science layer in src/compute: implement Mann-Kendall (S, Z, p-value, direction)
+and Theil-Sen slope with a 95 percent confidence interval, plus seasonal
+decomposition. Unit-test them against a known increasing series, a known flat
+series and a series with missing values. No language model may compute these.
+
+API: FastAPI with GET /trend?district=&variable=&start=&end= returning the
+result object including a provenance block with dataset_id, source_url,
+retrieved timestamp and whether the value came from live, cache or fixture.
+
+Frontend: a district map, a time-series chart with the fitted Theil-Sen line and
+confidence band, a two-district comparison view, and a provenance drawer showing
+the raw JSON behind every number.
+
+Optional agent: a narration step that turns the result object into two sentences
+of plain English and Bangla. It receives only the tool result, and output is
+blocked if any stated number is absent from that result.
+
+Apache-2.0, public repo, README listing every dataset with its URL.</code></pre></div>
+  </div>
+</section>
+
+<!-- ============ CHALLENGE 3 ============ -->
+<section class="page" id="c03" data-nav="Junior Astronaut Mission Trainer" data-group="The 14 challenges" data-num="03">
+  <div class="chead"><div class="num">03</div><div class="txt">
+    <h2>Build a Junior Astronaut Mission Trainer</h2>
+    <div class="chips"><span class="chip">Education &amp; gamification</span><span class="chip int">Intermediate</span><span class="chip beg">Youth</span></div>
+  </div></div>
+  <div class="tabs" role="tablist"></div>
+
+  <div class="panel live" data-label="Brief">
+    <h3>What the challenge asks</h3>
+    <p>An interactive, gamified training tool for young people who want to be astronauts — something that teaches by doing rather than by telling.</p>
+    <h3>The build</h3>
+    <p>A browser trainer with three short missions: a pre-launch checklist under time pressure, a docking alignment game, and an Earth-observation task where the player identifies real features in NASA imagery. Badges at the end, and every fact traceable to a NASA source.</p>
+    <div class="killer"><p class="k">Killer demo</p><p>Hand a judge a phone. Within fifteen seconds they are flying a docking approach and failing it, then succeeding. No explanation needed, which is exactly what the user experience criterion is measuring.</p></div>
+    <h3>Where the points are</h3>
+    <p>User experience and Presentation. The trap is that education projects score low on Relevance because NASA data ends up decorative — so make one mission genuinely depend on real imagery or real orbital numbers, and say which dataset it is on camera.</p>
+  </div>
+
+  <div class="panel" data-label="48-hour plan">
+    <div class="plan">
+      <div class="row"><div class="when">Before the event</div><div class="what">Cache EPIC and APOD imagery, write the question bank, and sketch the three missions on paper. Game design on the night is what kills these projects.</div></div>
+      <div class="row"><div class="when">Day 1 morning</div><div class="what">Core loop: start, play, score, retry. One mission working end to end.</div></div>
+      <div class="row"><div class="when">Day 1 afternoon</div><div class="what">Second mission and the badge system. Test with someone who has never seen it.</div></div>
+      <div class="row"><div class="when">Day 1 evening</div><div class="what">Third mission if time allows, sound, and the 240-second video by 18:30.</div></div>
+      <div class="row"><div class="when">Day 2 morning</div><div class="what">Difficulty balancing, Bangla strings, touch targets, offline service worker.</div></div>
+      <div class="row"><div class="when">Day 2 noon</div><div class="what">Freeze, record, submit.</div></div>
+    </div>
+    <div class="two">
+      <div class="box pre"><h4>Pre-build</h4><ul><li>Imagery cached and credited</li><li>Question bank written</li><li>Mission sketches agreed</li></ul></div>
+      <div class="box cut"><h4>Cut in this order</h4><ul><li>Two missions, then one</li><li>Drop sound</li><li>Drop badges, keep the score</li></ul></div>
+    </div>
+  </div>
+
+  <div class="panel" data-label="Data">
+    <ul>
+      <li><strong>api.nasa.gov EPIC</strong> — full-disc Earth images with real timestamps and positions, ideal for the observation mission.</li>
+      <li><strong>api.nasa.gov APOD</strong> — a daily image reward at the end of a mission.</li>
+      <li><strong>NASA image library</strong> — training and ISS photography for the checklist mission.</li>
+      <li><strong>NTRS</strong> — the source for any factual claim in the quiz.</li>
+    </ul>
+    <div class="note"><p><b>Under-18 rule.</b> This is the challenge most likely to trip over it. No recognisable name, voice or likeness of anyone under 18 in your video or submission — which means do not film your youngest playtesters. Film hands, or film an adult.</p></div>
+  </div>
+
+  <div class="panel" data-label="Architecture">
+    <pre><code>cached NASA imagery + strings.json
+                │
+                ▼
+      static PWA (service worker)
+                │
+    ┌───────────┼────────────┐
+    ▼           ▼            ▼
+ checklist   docking     observe Earth
+  mission     mission      mission
+    └───────────┼────────────┘
+                ▼
+         score + badges
+        (localStorage, guarded)</code></pre>
+    <p>Browser storage here is a per-player convenience, so wrap every read and write in try/catch and render correctly when it comes back empty.</p>
+  </div>
+
+  <div class="panel" data-label="Build prompt">
+    <div class="code"><div class="cap">Paste into your coding agent</div><pre><code>Build a mobile-first progressive web app that trains young people as junior
+astronauts through three short missions.
+
+Mission 1, pre-launch checklist: ordered steps under a timer, wrong order gives
+a real explanation of what would have gone wrong.
+Mission 2, docking: a canvas game aligning a spacecraft with an ISS port using
+arrow keys or touch, with drift and a fuel budget.
+Mission 3, Earth observation: show a cached NASA EPIC image and ask the player
+to identify a feature, scored against the image metadata.
+
+Everything loads from cached local assets through a service worker so it works
+with no connection. Score and badges in localStorage, wrapped in try/catch, with
+a sensible empty state. English and Bangla strings from strings.json.
+
+Accessibility: 44px touch targets, keyboard playable, prefers-reduced-motion
+respected, colour is never the only signal.
+
+Credit every NASA image in an about screen with its source URL. Apache-2.0.</code></pre></div>
+  </div>
+</section>
+
+<!-- ============ CHALLENGE 4 ============ -->
+<section class="page" id="c04" data-nav="CLPS Lunar Mission Browser" data-group="The 14 challenges" data-num="04">
+  <div class="chead"><div class="num">04</div><div class="txt">
+    <h2>CLPS Lunar Mission Browser</h2>
+    <div class="chips"><span class="chip">Lunar exploration &amp; software</span><span class="chip adv">Advanced</span><span class="chip int">Intermediate</span></div>
+  </div></div>
+  <div class="tabs" role="tablist"></div>
+
+  <div class="panel live" data-label="Brief">
+    <h3>What the challenge asks</h3>
+    <p>An interactive browser for NASA's Commercial Lunar Payload Services missions — the deliveries that carry NASA instruments to the Moon on commercial landers.</p>
+    <h3>The build</h3>
+    <p>A lunar map where every CLPS mission is a landing site with its payload manifest, provider, target date and status, layered over real lunar terrain, with a filter by payload type and a timeline of the whole programme.</p>
+    <div class="killer"><p class="k">Killer demo</p><p>Filter to "instruments that measure volatiles", and the map redraws to show only the south-polar sites that carry them, with the lunar terrain and the landing ellipse underneath.</p></div>
+    <h3>Where the points are</h3>
+    <p>Relevance and Validity: this is a data-faithfulness project. If a payload list is wrong, an expert judge will notice. Cite the source for every mission record and mark anything unconfirmed as unconfirmed rather than guessing.</p>
+  </div>
+
+  <div class="panel" data-label="48-hour plan">
+    <div class="plan">
+      <div class="row"><div class="when">Before the event</div><div class="what">Compile the CLPS mission table — provider, lander, target site, payloads, dates, status, source URL for each row. This research is slow and must not happen on the night.</div></div>
+      <div class="row"><div class="when">Day 1 morning</div><div class="what">Moon Trek WMTS rendering with the sites plotted and labelled.</div></div>
+      <div class="row"><div class="when">Day 1 afternoon</div><div class="what">Mission detail panel and payload filter. Add the terrain and elevation layers.</div></div>
+      <div class="row"><div class="when">Day 1 evening</div><div class="what">Programme timeline across the bottom, linked to the map. Record by 18:30.</div></div>
+      <div class="row"><div class="when">Day 2 morning</div><div class="what">Compare mode for two sites, source links on every field, mobile layout.</div></div>
+      <div class="row"><div class="when">Day 2 noon</div><div class="what">Freeze, record, submit.</div></div>
+    </div>
+    <div class="two">
+      <div class="box pre"><h4>Pre-build</h4><ul><li>Mission and payload table with citations</li><li>Moon Trek tiles cached to PMTiles</li><li>South-polar elevation subset</li></ul></div>
+      <div class="box cut"><h4>Cut in this order</h4><ul><li>Fewer missions, fully sourced</li><li>Drop the elevation layer</li><li>Timeline becomes a static list</li><li>Static basemap image</li></ul></div>
+    </div>
+  </div>
+
+  <div class="panel" data-label="Data">
+    <ul>
+      <li><strong>NASA Moon Trek</strong> — WMTS basemap tiles, elevation and slope products for the south polar region.</li>
+      <li><strong>PDS lunar holdings</strong> — LRO-derived products and stable identifiers.</li>
+      <li><strong>NTRS and NASA mission pages</strong> — payload manifests and mission status.</li>
+      <li><strong>SpiceyPy</strong> — optional: compute Sun elevation at a landing site for a date, which turns a map into a planning tool.</li>
+    </ul>
+    <div class="note warn"><p><b>Geometry is computed, never guessed.</b> If you show illumination or Earth visibility, it comes out of SPICE kernels in <code>src/compute</code>. A language model must not estimate where the Sun is.</p></div>
+  </div>
+
+  <div class="panel" data-label="Architecture">
+    <pre><code>missions.json (cited)   Moon Trek WMTS ──► PMTiles
+        │                        │
+        └────────┬───────────────┘
+                 ▼
+           MapLibre lunar map
+                 │
+      ┌──────────┼───────────┐
+      ▼          ▼           ▼
+  payload    mission     timeline
+   filter     panel       scrubber
+                 │
+                 ▼
+      optional: SpiceyPy illumination
+        src/compute/geometry.py</code></pre>
+  </div>
+
+  <div class="panel" data-label="Build prompt">
+    <div class="code"><div class="cap">Paste into your coding agent</div><pre><code>Build a CLPS lunar mission browser.
+
+Data: data/missions.json, one record per CLPS delivery with provider, lander,
+target coordinates, landing ellipse, target date, status, payload array (each
+with name, instrument type and purpose) and a source_url per record.
+
+Map: MapLibre with a local PMTiles lunar basemap derived from NASA Moon Trek,
+plus an optional hillshade layer. Plot each landing site with its ellipse.
+
+Interactions: filter missions by payload instrument type and by status; click a
+site for a detail panel listing every payload with its purpose and the source
+link; a timeline along the bottom that filters the map by target date; a compare
+mode that puts two sites side by side.
+
+Optional: a src/compute/geometry.py using SpiceyPy to compute Sun elevation at a
+site for a chosen date from local kernels. The value is computed in Python and
+passed to the interface; never estimated.
+
+Mark any unconfirmed field explicitly as unconfirmed. Apache-2.0, public repo,
+README citing every mission source.</code></pre></div>
+  </div>
+</section>
+
+<!-- ============ CHALLENGE 5 ============ -->
+<section class="page" id="c05" data-nav="Astronaut Health Monitoring" data-group="The 14 challenges" data-num="05">
+  <div class="chead"><div class="num">05</div><div class="txt">
+    <h2>Health Monitoring Software for Astronauts</h2>
+    <div class="chips"><span class="chip">Health &amp; life support</span><span class="chip int">Intermediate</span></div>
+  </div></div>
+  <div class="tabs" role="tablist"></div>
+
+  <div class="panel live" data-label="Brief">
+    <h3>What the challenge asks</h3>
+    <p>Software that monitors, analyses and helps predict astronaut health on long missions, where a crew member is months from a hospital.</p>
+    <h3>The build</h3>
+    <p>A crew health console: a vitals stream, deterministic anomaly detection against a personal baseline, and an explanation layer that says what changed, when, and which published study or dataset supports the interpretation.</p>
+    <div class="killer"><p class="k">Killer demo</p><p>The stream runs. A flag appears — heart rate variability down against this crew member's own thirty-day baseline — and the panel shows the deviation, the detection rule that fired, and the OSDR study behind the interpretation. Nothing is diagnosed; everything is evidenced.</p></div>
+    <h3>Where the points are</h3>
+    <p>Validity, and the failure mode is obvious: a project that looks like a language model diagnosing a patient scores badly and deserves to. Detection is a tested rule in your code. The model only explains what the rule found and cites the literature.</p>
+  </div>
+
+  <div class="panel" data-label="48-hour plan">
+    <div class="plan">
+      <div class="row"><div class="when">Before the event</div><div class="what">Cache OSDR study metadata and write a realistic vitals fixture — 600 rows, one per second, with a planted anomaly at a known index so you can rehearse the demo beat.</div></div>
+      <div class="row"><div class="when">Day 1 morning</div><div class="what">Schema, replay websocket, and the console rendering live charts.</div></div>
+      <div class="row"><div class="when">Day 1 afternoon</div><div class="what">Baseline computation and the detection rules, with tests. This is the science boundary — keep it in src/compute.</div></div>
+      <div class="row"><div class="when">Day 1 evening</div><div class="what">Alert panel with the rule that fired and the evidence link. Record by 18:30.</div></div>
+      <div class="row"><div class="when">Day 2 morning</div><div class="what">Explanation agent over tool results only, plus the crew-facing summary view.</div></div>
+      <div class="row"><div class="when">Day 2 noon</div><div class="what">Freeze, record, submit.</div></div>
+    </div>
+    <div class="two">
+      <div class="box pre"><h4>Pre-build</h4><ul><li>Vitals fixture with a planted anomaly</li><li>OSDR study metadata cached</li><li>Detection rules drafted</li></ul></div>
+      <div class="box cut"><h4>Cut in this order</h4><ul><li>Three signals instead of six</li><li>Drop prediction, keep detection</li><li>Drop the agent, keep rule text</li></ul></div>
+    </div>
+  </div>
+
+  <div class="panel" data-label="Data">
+    <ul>
+      <li><strong>NASA OSDR and GeneLab</strong> — open spaceflight biology and human research data with study identifiers you can cite.</li>
+      <li><strong>NTRS</strong> — Human Research Program reports for the physiological context.</li>
+      <li><strong>Simulated telemetry</strong> — generate it yourself and label it clearly as simulated in the interface and the video. Simulated data that is honestly labelled costs you nothing; simulated data presented as real costs you everything.</li>
+    </ul>
+    <div class="code"><div class="cap">A detection rule, not a diagnosis</div><pre><code>def hrv_deviation(series, baseline_days=30, threshold_sd=2.0):
+    """Flags when HRV falls more than threshold_sd below the personal baseline.
+    Returns the rule that fired and the numbers behind it. No interpretation."""
+    base = series[-baseline_days:]
+    mu, sd = base.mean(), base.std(ddof=1)
+    current = series[-1]
+    z = (current - mu) / sd if sd else 0.0
+    return {"rule": "hrv_below_personal_baseline",
+            "current": float(current), "baseline_mean": float(mu),
+            "baseline_sd": float(sd), "z": float(z),
+            "fired": bool(z <= -threshold_sd),
+            "window_days": baseline_days}</code></pre></div>
+  </div>
+
+  <div class="panel" data-label="Architecture">
+    <pre><code>vitals fixture ──► replay websocket
+                        │
+                        ▼
+              src/compute/detect.py     ◄── tested rules, personal baseline
+                        │
+              ┌─────────┴──────────┐
+              ▼                    ▼
+        live console          alert object
+        charts + trend        rule + numbers
+                                   │
+                                   ▼
+                        explanation agent
+                     (reads alert + OSDR metadata,
+                      cites study id, never diagnoses)</code></pre>
+  </div>
+
+  <div class="panel" data-label="Build prompt">
+    <div class="code"><div class="cap">Paste into your coding agent</div><pre><code>Build a crew health monitoring console for long-duration missions.
+
+Stream: FastAPI websocket replaying demo_fixtures/vitals.json at one row per
+second, with a speed control. Signals: heart rate, HRV, SpO2, sleep hours,
+core temperature, exercise minutes. Label the data as simulated in the UI.
+
+Detection in src/compute: rolling personal baselines per signal, z-score
+deviation rules, and a multi-signal rule that fires when two or more signals
+deviate in the same 48-hour window. Unit-test each rule against a fixture with
+a planted anomaly and against a clean fixture. No language model computes these.
+
+Console: live charts with the baseline band drawn behind the current trace, an
+alert list showing which rule fired and the exact numbers, and a crew-facing
+summary in plain language.
+
+Explanation agent: receives only the alert object plus cached OSDR study
+metadata. It describes what deviated and cites a study id and URL. It must never
+state a diagnosis or recommend treatment; enforce this in the system prompt and
+in a post-check that blocks diagnostic language.
+
+Apache-2.0, public repo, README stating clearly that telemetry is simulated.</code></pre></div>
+  </div>
+</section>
+
+<!-- ============ CHALLENGE 6 ============ -->
+<section class="page" id="c06" data-nav="Dancing with the SARs" data-group="The 14 challenges" data-num="06">
+  <div class="chead"><div class="num">06</div><div class="txt">
+    <h2>Dancing with the SARs</h2>
+    <div class="chips"><span class="chip">SAR &amp; remote sensing</span><span class="chip adv">Advanced</span><span class="chip int">Intermediate</span></div>
+  </div></div>
+  <div class="tabs" role="tablist"></div>
+
+  <div class="panel live" data-label="Brief">
+    <h3>What the challenge asks</h3>
+    <p>Use synthetic aperture radar to detect environmental change, disaster impact or ground motion. Radar sees through cloud and at night, which is precisely why it matters here.</p>
+    <h3>The build</h3>
+    <p>Flood extent and river-bank erosion on the Jamuna or the Padma. Two radar acquisitions before and after a monsoon flood, a computed change mask, and an inundated-area figure in square kilometres. This is the single strongest local-impact project on the board: during the monsoon, optical satellites see cloud and radar sees the water.</p>
+    <div class="killer"><p class="k">Killer demo</p><p>Drag the swipe handle across the river. Dry channel on one side, flood on the other, and a number on screen: this many square kilometres inundated between these two dates, from these two Sentinel-1 scenes.</p></div>
+    <h3>Where the points are</h3>
+    <p>Impact and Relevance are almost free if you pick a real Bangladesh flood. Protect Validity by stating the processing steps, the threshold you used and its uncertainty — and by saying "provisional" if any NISAR product is involved.</p>
+  </div>
+
+  <div class="panel" data-label="48-hour plan">
+    <div class="plan">
+      <div class="row"><div class="when">Before the event</div><div class="what">Download two to four Sentinel-1 GRD scenes over one river reach, before and after a known flood. Preprocess to calibrated backscatter and save as COGs. These are large files — this step cannot happen on venue wifi.</div></div>
+      <div class="row"><div class="when">Day 1 morning</div><div class="what">Change detection: difference, threshold, clean up speckle, produce a water mask. Validate against what you can see in the imagery.</div></div>
+      <div class="row"><div class="when">Day 1 afternoon</div><div class="what">Serve the COGs, build the map with the before-and-after swipe.</div></div>
+      <div class="row"><div class="when">Day 1 evening</div><div class="what">Area computation in square kilometres, with the assumptions written on screen. Record by 18:30.</div></div>
+      <div class="row"><div class="when">Day 2 morning</div><div class="what">Add a second date pair, the erosion line comparison, and the methods panel.</div></div>
+      <div class="row"><div class="when">Day 2 noon</div><div class="what">Freeze, record, submit.</div></div>
+    </div>
+    <div class="two">
+      <div class="box pre"><h4>Pre-build</h4><ul><li>Scenes downloaded and calibrated</li><li>COGs written and tiling tested</li><li>A known flood date pair chosen</li></ul></div>
+      <div class="box cut"><h4>Cut in this order</h4><ul><li>One event, one river reach</li><li>Pre-rendered PNG overlays instead of live tiling</li><li>Drop erosion, keep flood extent</li></ul></div>
+    </div>
+  </div>
+
+  <div class="panel" data-label="Data">
+    <ul>
+      <li><strong>Sentinel-1 GRD through ASF</strong> — the workhorse. Free, long archive, well documented, and it works in monsoon cloud.</li>
+      <li><strong>NISAR L-band through ASF</strong> — public since 20 July 2026 for acquisitions from 17 June 2026 onward, with the full record expected by the end of 2026. Products are provisional and validated at a limited set of sites. Use it if your area and dates are covered, and label it.</li>
+      <li><strong>GIBS</strong> — optical context tiles for the same dates, useful for showing what optical sensors could not see.</li>
+      <li><strong>Bangladesh Water Development Board</strong> — gauge records to sanity-check your flood dates. Partner data on top of NASA data is what lifts the NASA data usage score.</li>
+    </ul>
+    <div class="code"><div class="cap">Change detection that you can defend in a question</div><pre><code>import numpy as np, rasterio
+from scipy import ndimage
+
+def water_mask(db_array, threshold_db=-16.0, min_pixels=50):
+    """Low backscatter means smooth water. Threshold, then remove specks."""
+    mask = db_array < threshold_db
+    labels, n = ndimage.label(mask)
+    sizes = ndimage.sum(mask, labels, range(1, n + 1))
+    keep = np.isin(labels, np.flatnonzero(sizes >= min_pixels) + 1)
+    return keep
+
+def inundated_km2(before_mask, after_mask, pixel_m=10.0):
+    new_water = np.logical_and(after_mask, ~before_mask)
+    return float(new_water.sum() * (pixel_m ** 2) / 1e6)</code></pre></div>
+  </div>
+
+  <div class="panel" data-label="Architecture">
+    <pre><code>asf_search ──► Sentinel-1 GRD (pre-event)
+                    │
+        calibration · speckle filter · geocode
+                    │
+                    ▼
+            COGs in cache/sar/
+                    │
+      ┌─────────────┼─────────────┐
+      ▼             ▼             ▼
+ rio-tiler      src/compute    area stats
+ tile server   change.py       km² + assumptions
+      └─────────────┼─────────────┘
+                    ▼
+        MapLibre before/after swipe
+                    │
+                    ▼
+             methods panel
+   threshold · dates · scene ids · provisional flag</code></pre>
+  </div>
+
+  <div class="panel" data-label="Build prompt">
+    <div class="code"><div class="cap">Paste into your coding agent</div><pre><code>Build a SAR flood and river-erosion change detector for a Bangladesh river reach.
+
+Input: two pre-downloaded, calibrated Sentinel-1 GRD scenes as COGs in
+cache/sar/, one before and one after a known flood, plus their metadata
+(scene id, acquisition date, orbit, polarisation).
+
+src/compute/change.py: convert to dB, apply a water threshold with a
+configurable value, remove connected components below a minimum size, produce
+before and after water masks, a new-water mask, and an inundated area in square
+kilometres from the pixel spacing. Unit-test the area function against a
+synthetic mask of known size.
+
+Serving: rio-tiler or titiler over the COGs so the map renders from local files
+with no network.
+
+Frontend: MapLibre with a draggable before/after swipe, the new-water mask as a
+coloured overlay, and a persistent readout of inundated area with the two dates
+and both scene ids.
+
+Methods panel: list every processing step, the threshold used, the pixel
+spacing, and an uncertainty note. If any NISAR product is used, label it
+PROVISIONAL and say it is validated at a limited set of sites.
+
+Apache-2.0, public repo, README citing ASF and the scene identifiers.</code></pre></div>
+  </div>
+</section>
+
+<!-- ============ CHALLENGE 7 ============ -->
+<section class="page" id="c07" data-nav="Field Shift" data-group="The 14 challenges" data-num="07">
+  <div class="chead"><div class="num">07</div><div class="txt">
+    <h2>Field Shift: Adapting Farms with NASA Data</h2>
+    <div class="chips"><span class="chip">Agriculture &amp; climate adaptation</span><span class="chip adv">Advanced</span><span class="chip int">Intermediate</span></div>
+  </div></div>
+  <div class="tabs" role="tablist"></div>
+
+  <div class="panel live" data-label="Brief">
+    <h3>What the challenge asks</h3>
+    <p>Help farmers adapt their practices using satellite observations and predictive climate data.</p>
+    <h3>The build</h3>
+    <p>A planting-window advisory for Bangladeshi rice. Pick a district and a crop, and the tool shows how the onset of usable rainfall and the accumulation of growing degree days have shifted over twenty-five years, then states the recommended window shift in days with the evidence behind it.</p>
+    <div class="killer"><p class="k">Killer demo</p><p>A farmer in Rajshahi selects Aman rice. The tool says the usable-rain onset has moved eleven days later since 2001, shows the two distributions that prove it, and gives the revised transplanting window — in Bangla, on a phone.</p></div>
+    <h3>Where the points are</h3>
+    <p>Impact, if the output is a decision a real farmer could act on. The failure mode is a dashboard that shows data and leaves the farmer to work it out. End on a sentence, not a chart.</p>
+  </div>
+
+  <div class="panel" data-label="48-hour plan">
+    <div class="plan">
+      <div class="row"><div class="when">Before the event</div><div class="what">Cache POWER daily series for your districts, NDVI for the same areas, and SMAP soil moisture. Agree the agronomic definitions — what counts as onset, which degree-day base — with someone who knows farming.</div></div>
+      <div class="row"><div class="when">Day 1 morning</div><div class="what">Onset detection and degree-day accumulation in src/compute, with tests.</div></div>
+      <div class="row"><div class="when">Day 1 afternoon</div><div class="what">District map, crop selector, and the two-period distribution comparison.</div></div>
+      <div class="row"><div class="when">Day 1 evening</div><div class="what">The advisory sentence and its assumptions. Record by 18:30.</div></div>
+      <div class="row"><div class="when">Day 2 morning</div><div class="what">Bangla interface, phone layout, SMS-length summary. Test it with someone outside the team.</div></div>
+      <div class="row"><div class="when">Day 2 noon</div><div class="what">Freeze, record, submit.</div></div>
+    </div>
+    <div class="two">
+      <div class="box pre"><h4>Pre-build</h4><ul><li>POWER, NDVI and SMAP for every district</li><li>Crop calendar and degree-day bases agreed</li><li>Bangla strings drafted</li></ul></div>
+      <div class="box cut"><h4>Cut in this order</h4><ul><li>One crop instead of three</li><li>One district, told properly</li><li>Drop SMAP, keep rainfall and temperature</li><li>Drop the map, keep the advisory</li></ul></div>
+    </div>
+  </div>
+
+  <div class="panel" data-label="Data">
+    <ul>
+      <li><strong>NASA POWER</strong> — daily rainfall, temperature and solar radiation per district. The backbone of the whole advisory.</li>
+      <li><strong>IMERG</strong> — gridded precipitation when you need spatial detail rather than a point.</li>
+      <li><strong>SMAP</strong> — soil moisture, which is what actually determines whether a field is workable.</li>
+      <li><strong>MODIS or VIIRS NDVI</strong> — observed greenness, so you can check your predicted window against what farmers actually did.</li>
+    </ul>
+    <div class="code"><div class="cap">Monsoon onset — one definition, stated openly</div><pre><code>def rain_onset(daily_mm, window=7, threshold_mm=20, dry_spell_max=7):
+    """First day of a 7-day window with 20mm or more that is not followed by a
+    dry spell longer than 7 days. State this definition in the interface."""
+    import numpy as np
+    r = np.asarray(daily_mm, float)
+    for i in range(len(r) - window - dry_spell_max):
+        if r[i:i + window].sum() >= threshold_mm:
+            after = r[i + window:i + window + dry_spell_max]
+            if (after > 1.0).any():
+                return i
+    return None</code></pre></div>
+    <div class="note"><p><b>Say the definition out loud.</b> Onset has a dozen definitions in the literature. Naming yours, and showing the result is stable if you shift the threshold a little, is the difference between a 10 and a 20 on validity.</p></div>
+  </div>
+
+  <div class="panel" data-label="Architecture">
+    <pre><code>POWER · IMERG · SMAP · NDVI
+            │ (pre-event)
+            ▼
+     cache: parquet per district
+            │
+            ▼
+  src/compute/agro.py
+  onset · degree days · shift test
+            │
+            ▼
+     FastAPI /advisory
+            │
+   ┌────────┴────────┐
+   ▼                 ▼
+ map + charts   advisory sentence
+                Bangla + English
+            │
+            ▼
+   assumptions + dataset citations</code></pre>
+  </div>
+
+  <div class="panel" data-label="Build prompt">
+    <div class="code"><div class="cap">Paste into your coding agent</div><pre><code>Build a planting-window advisory for Bangladeshi farmers.
+
+Data: pre-cached NASA POWER daily parquet per district (rainfall, T2M, solar),
+plus SMAP soil moisture and NDVI series. OFFLINE=1 forces cache reads.
+
+src/compute/agro.py: monsoon onset detection with a stated, configurable
+definition; growing-degree-day accumulation with a crop-specific base; a
+comparison of the onset distribution for 2001-2012 against 2013-2025 using a
+Mann-Whitney test; and a recommended window shift in whole days. Unit-test each
+function, including a sensitivity check that reports how the shift changes when
+the onset threshold moves by plus or minus 5mm.
+
+API: GET /advisory?district=&crop= returning the shift in days, the two
+distributions, the test statistic, the assumptions, and a provenance block.
+
+Frontend: mobile-first, Bangla and English. A district map, the two-period
+distribution chart, and a single clear advisory sentence at the top. Include an
+SMS-length version of the advice, under 160 characters, that a farmer could be
+sent.
+
+Show the onset definition and every assumption on screen. Apache-2.0, public
+repo, README listing each dataset with its URL.</code></pre></div>
+  </div>
+</section>
+
+<!-- ============ CHALLENGE 8 ============ -->
+<section class="page" id="c08" data-nav="Flame in Freefall" data-group="The 14 challenges" data-num="08">
+  <div class="chead"><div class="num">08</div><div class="txt">
+    <h2>Flame in Freefall</h2>
+    <div class="chips"><span class="chip">AI &amp; microgravity safety</span><span class="chip adv">Advanced</span><span class="chip int">Intermediate</span></div>
+  </div></div>
+  <div class="tabs" role="tablist"></div>
+
+  <div class="panel live" data-label="Brief">
+    <h3>What the challenge asks</h3>
+    <p>Apply AI to decades of microgravity combustion research to produce fire-safety insight for spacecraft. Fire behaves differently without buoyancy — flames become spherical, spread slowly, and can survive in conditions that would extinguish them on Earth.</p>
+    <h3>The build</h3>
+    <p>A flammability explorer. Set oxygen concentration, pressure, flow velocity and material, and a model trained on published microgravity combustion results predicts the flame-spread regime, with an explanation layer that cites the experiments behind the prediction.</p>
+    <div class="killer"><p class="k">Killer demo</p><p>Slide oxygen from 21 down to 17 percent. The prediction crosses a boundary and the explanation names the experiments on either side of that boundary, with their report identifiers.</p></div>
+    <h3>Where the points are</h3>
+    <p>This challenge explicitly asks for AI, which is a trap and an opportunity. The opportunity: a trained model plus a retrieval layer over real NASA reports scores well on Creativity and Relevance. The trap: a chat interface over some PDFs is a 5 on validity. Show the training data, the features, and an honest accuracy figure.</p>
+  </div>
+
+  <div class="panel" data-label="48-hour plan">
+    <div class="plan">
+      <div class="row"><div class="when">Before the event</div><div class="what">Gather microgravity combustion reports from NTRS and OSDR, extract a tabular dataset of conditions and outcomes, and commit both the table and a trained model artifact. Data extraction is the slow part and it must be done in advance.</div></div>
+      <div class="row"><div class="when">Day 1 morning</div><div class="what">Feature engineering and a baseline classifier with honest cross-validation. Report the accuracy you actually get.</div></div>
+      <div class="row"><div class="when">Day 1 afternoon</div><div class="what">Serve the model, build the slider interface, show the decision boundary.</div></div>
+      <div class="row"><div class="when">Day 1 evening</div><div class="what">Retrieval over the report corpus, so each prediction links to the nearest real experiments. Record by 18:30.</div></div>
+      <div class="row"><div class="when">Day 2 morning</div><div class="what">Uncertainty display, the out-of-range warning, and the safety framing for a spacecraft operator.</div></div>
+      <div class="row"><div class="when">Day 2 noon</div><div class="what">Freeze, record, submit.</div></div>
+    </div>
+    <div class="two">
+      <div class="box pre"><h4>Pre-build</h4><ul><li>Extracted experiment table</li><li>Report corpus with identifiers</li><li>Trained model artifact committed</li></ul></div>
+      <div class="box cut"><h4>Cut in this order</h4><ul><li>Classification only, drop regression</li><li>Fixed presets instead of free sliders</li><li>Retrieval over titles instead of full text</li></ul></div>
+    </div>
+  </div>
+
+  <div class="panel" data-label="Data">
+    <ul>
+      <li><strong>NTRS</strong> — the primary source. Microgravity combustion reports including the FLEX and SoFIE experiment families, downloadable as PDFs with citable identifiers.</li>
+      <li><strong>NASA OSDR</strong> — spaceflight experiment records and metadata.</li>
+      <li><strong>NASA Glenn physical sciences resources</strong> — combustion experiment documentation and imagery.</li>
+    </ul>
+    <div class="note hard"><p><b>Never extrapolate silently.</b> If the requested conditions fall outside the range of your training data, the interface must say so and refuse to predict. A fire-safety tool that quietly guesses is worse than no tool, and a judge will ask.</p></div>
+    <div class="code"><div class="cap">The prediction object, with its limits attached</div><pre><code>{
+  "inputs": {"oxygen_pct": 17.0, "pressure_kpa": 101.3,
+             "flow_cm_s": 5.0, "material": "PMMA"},
+  "in_training_range": true,
+  "prediction": "marginal_spread",
+  "probabilities": {"no_spread": 0.28, "marginal_spread": 0.57, "spread": 0.15},
+  "model": {"type": "gradient_boosting", "n_train": 184,
+            "cv_accuracy": 0.79, "features": ["oxygen_pct","pressure_kpa","flow_cm_s","material"]},
+  "nearest_experiments": [
+    {"report_id": "NTRS 20205008xxx", "oxygen_pct": 17.5, "outcome": "marginal_spread",
+     "source_url": "https://ntrs.nasa.gov/citations/20205008xxx"}
+  ]
+}</code></pre></div>
+  </div>
+
+  <div class="panel" data-label="Architecture">
+    <pre><code>NTRS reports + OSDR records
+            │ (pre-event extraction)
+            ▼
+   experiments.parquet  ──►  report corpus + index
+            │                        │
+            ▼                        │
+  src/compute/model.py               │
+  train · cross-validate · save      │
+            │                        │
+            ▼                        ▼
+     FastAPI /predict         retrieval: nearest
+            │                 real experiments
+            └───────┬────────────────┘
+                    ▼
+          slider interface
+   prediction · probabilities · range guard
+                    │
+                    ▼
+        explanation citing report ids</code></pre>
+  </div>
+
+  <div class="panel" data-label="Build prompt">
+    <div class="code"><div class="cap">Paste into your coding agent</div><pre><code>Build a microgravity fire-safety explorer.
+
+Data: cache/experiments.parquet, one row per published microgravity combustion
+test with oxygen_pct, pressure_kpa, flow_cm_s, material, sample geometry, the
+observed outcome class, and a report_id plus source_url.
+
+src/compute/model.py: train a small gradient-boosting classifier predicting the
+flame-spread regime. Report honest stratified cross-validation accuracy and a
+confusion matrix. Save the model artifact to the repo. Compute and store the
+min and max of every numeric feature as the training range.
+
+API: POST /predict returning the class, class probabilities, the model metadata
+including n_train and cv_accuracy, an in_training_range boolean, and the three
+nearest real experiments by feature distance with their report ids and URLs.
+
+If in_training_range is false, return no prediction and an explanation that the
+requested conditions are outside the published experimental envelope.
+
+Frontend: sliders for oxygen, pressure and flow, a material selector, a
+probability bar, a two-dimensional decision-boundary plot with the real
+experiments overlaid as points, and a panel listing the nearest experiments with
+clickable citations.
+
+The language model writes the explanation only, from the prediction object and
+retrieved report abstracts. It never predicts and never states a number that is
+absent from the object. Apache-2.0, public repo.</code></pre></div>
+  </div>
+</section>
+
+<!-- ============ CHALLENGE 9 ============ -->
+<section class="page" id="c09" data-nav="MODIS and VIIRS Harmonization" data-group="The 14 challenges" data-num="09">
+  <div class="chead"><div class="num">09</div><div class="txt">
+    <h2>Harmonization of MODIS and VIIRS Hot Spots</h2>
+    <div class="chips"><span class="chip">Thermal sensing &amp; wildfires</span><span class="chip adv">Advanced</span><span class="chip int">Intermediate</span></div>
+  </div></div>
+  <div class="tabs" role="tablist"></div>
+
+  <div class="panel live" data-label="Brief">
+    <h3>What the challenge asks</h3>
+    <p>Combine and harmonise MODIS hotspot detections at one kilometre with VIIRS detections at 375 metres, so that wildfire activity can be tracked consistently across the whole record.</p>
+    <h3>The build</h3>
+    <p>A harmonisation engine and a burning-activity calendar. The finer sensor detects more fires and smaller ones, so a raw count series shows a step change at the sensor transition that is an artefact of the instrument, not of the world. Cluster overlapping detections onto a common grid, model the detection difference, and produce a series you can actually compare across decades.</p>
+    <div class="killer"><p class="k">Killer demo</p><p>A single toggle: raw against harmonised, over South Asia from 2003 to 2026. In raw, counts appear to triple at the transition. In harmonised, the artefact disappears and the real seasonal signal is visible underneath.</p></div>
+    <h3>Where the points are</h3>
+    <p>This is the most timely challenge on the board. Suomi-NPP data stops being available from NASA on 1 November 2026, with MODIS shutting down from late 2026 — so continuity between sensors stops being academic and becomes an operational problem. Say that in your video.</p>
+  </div>
+
+  <div class="panel" data-label="48-hour plan">
+    <div class="plan">
+      <div class="row"><div class="when">Before the event</div><div class="what">Pull multi-year FIRMS archive CSVs for MODIS and for VIIRS over your region and write them to parquet. Mind the transaction limit: 5,000 per ten minutes is generous, but bulk archive downloads are the right route for long records.</div></div>
+      <div class="row"><div class="when">Day 1 morning</div><div class="what">Grid the detections, cluster overlapping same-day detections, and build the raw and harmonised series. This is the project — get it right before anything else.</div></div>
+      <div class="row"><div class="when">Day 1 afternoon</div><div class="what">The calendar view and the map. Make the toggle work by the 15:00 round.</div></div>
+      <div class="row"><div class="when">Day 1 evening</div><div class="what">Seasonal baseline and the anomaly question: is today unusual for this place at this time of year? Record by 18:30.</div></div>
+      <div class="row"><div class="when">Day 2 morning</div><div class="what">The methods panel, the sensor-overlap validation, and the responder-facing brief.</div></div>
+      <div class="row"><div class="when">Day 2 noon</div><div class="what">Freeze, record, submit.</div></div>
+    </div>
+    <div class="two">
+      <div class="box pre"><h4>Pre-build</h4><ul><li>Multi-year FIRMS parquet for both sensors</li><li>Overlap period identified for validation</li><li>Grid definition agreed</li></ul></div>
+      <div class="box cut"><h4>Cut in this order</h4><ul><li>One region instead of a subcontinent</li><li>Five years instead of twenty</li><li>Drop the anomaly engine, keep harmonisation</li></ul></div>
+    </div>
+  </div>
+
+  <div class="panel" data-label="Data">
+    <ul>
+      <li><strong>FIRMS area API</strong> — MODIS and VIIRS active fire detections with confidence, brightness and acquisition time. Free key, 5,000 transactions per ten minutes.</li>
+      <li><strong>VIIRS on NOAA-20 and NOAA-21</strong> — the sensors that continue. Prefer these for anything forward-looking.</li>
+      <li><strong>NASA POWER</strong> — wind, temperature and humidity as the environmental context for an anomaly.</li>
+      <li><strong>The overlap period</strong> — where MODIS and VIIRS both observed the same fires is your validation set. Use it.</li>
+    </ul>
+    <div class="code"><div class="cap">Harmonisation, in the form a judge can check</div><pre><code>import duckdb
+
+def harmonise(parquet_glob, cell_km=5.5):
+    """Collapse same-day detections onto a common grid so a finer sensor cannot
+    inflate the count. One cell-day with any detection counts once."""
+    deg = cell_km / 111.0
+    return duckdb.sql(f"""
+      SELECT acq_date,
+             floor(latitude  / {deg}) AS cell_y,
+             floor(longitude / {deg}) AS cell_x,
+             count(*)                        AS raw_detections,
+             count(DISTINCT satellite)       AS sensors_agreeing,
+             max(frp)                        AS peak_frp
+      FROM '{parquet_glob}'
+      WHERE confidence >= 50
+      GROUP BY 1,2,3
+    """).df()
+
+# Raw series  = count(*) per day across all detections
+# Harmonised  = count of distinct cell-days per day
+# Validate on the overlap period: harmonised MODIS and harmonised VIIRS should
+# track each other far more closely than the raw counts do. Report that ratio.</code></pre></div>
+  </div>
+
+  <div class="panel" data-label="Architecture">
+    <pre><code>FIRMS MODIS ──┐
+              ├──► parquet (pre-event)
+FIRMS VIIRS ──┘        │
+   NOAA-20 / NOAA-21    │
+                        ▼
+              src/compute/harmonize.py
+      grid · cluster · overlap validation · baseline
+                        │
+            ┌───────────┼────────────┐
+            ▼           ▼            ▼
+      raw series   harmonised    anomaly vs
+                    series      seasonal baseline
+            └───────────┼────────────┘
+                        ▼
+            map + burning calendar
+              raw/harmonised toggle
+                        │
+                        ▼
+         methods panel + responder brief</code></pre>
+  </div>
+
+  <div class="panel" data-label="Build prompt">
+    <div class="code"><div class="cap">Paste into your coding agent</div><pre><code>Build a MODIS and VIIRS hotspot harmonisation tool with a burning-activity
+calendar.
+
+Data: pre-cached FIRMS detections in parquet for MODIS and for VIIRS on
+NOAA-20 and NOAA-21, covering South Asia, filtered to confidence 50 or above.
+
+src/compute/harmonize.py: assign detections to a common grid of configurable
+cell size, default 5.5km; collapse same-day detections within a cell so a finer
+sensor cannot inflate counts; produce a raw daily series and a harmonised daily
+series; compute a day-of-year seasonal baseline with percentiles from the
+harmonised record; and compute an anomaly score for a chosen date and area.
+
+Validation: on the period where both sensors observed, report the correlation of
+raw MODIS against raw VIIRS and of harmonised against harmonised. Display both
+numbers in the interface — the improvement is the evidence that harmonisation
+worked.
+
+Frontend: a map of cells coloured by activity, a year-by-day calendar heatmap, a
+single toggle switching every chart between raw and harmonised, and a question
+box answering "is this unusual for this place and this time of year" with the
+percentile and the baseline window.
+
+Methods panel: cell size, confidence filter, the collapse rule, the validation
+correlations, and a note that Suomi-NPP data ends on 1 November 2026 and MODIS
+is being retired, which is why continuity matters.
+
+Apache-2.0, public repo, FIRMS cited with the sensor product names.</code></pre></div>
+  </div>
+</section>
+
+<!-- ============ CHALLENGE 10 ============ -->
+<section class="page" id="c10" data-nav="Earth Analogs for Moon and Mars" data-group="The 14 challenges" data-num="10">
+  <div class="chead"><div class="num">10</div><div class="txt">
+    <h2>Earth Locations that Analog Moon and Mars Bases</h2>
+    <div class="chips"><span class="chip">Planetary science &amp; Earth analogs</span><span class="chip adv">Advanced</span><span class="chip int">Intermediate</span><span class="chip beg">Youth</span></div>
+  </div></div>
+  <div class="tabs" role="tablist"></div>
+
+  <div class="panel live" data-label="Brief">
+    <h3>What the challenge asks</h3>
+    <p>Find places on Earth that mirror the geology or environment of a permanent Moon base site or a Mars location — the places where crews can train and hardware can be tested.</p>
+    <h3>The build</h3>
+    <p>A similarity search over Earth. Choose a target — the lunar south pole, Jezero Crater — and the tool scores every Earth grid cell against it on aridity, temperature range, elevation, slope, surface roughness and thermal behaviour, then ranks the best analogues with a rationale for each.</p>
+    <div class="killer"><p class="k">Killer demo</p><p>Pick Jezero. The globe lights up in a handful of places, and the top result comes with its scores broken down criterion by criterion, so you can see exactly which dimensions matched and which did not.</p></div>
+    <h3>Where the points are</h3>
+    <p>Creativity, because the framing is genuinely unusual, and Validity, because similarity must be computed with weights you can show rather than asserted by a model. Expose the weights as sliders and the whole thing becomes defensible and interactive at once.</p>
+  </div>
+
+  <div class="panel" data-label="48-hour plan">
+    <div class="plan">
+      <div class="row"><div class="when">Before the event</div><div class="what">Assemble coarse global layers — climate from POWER or a gridded product, elevation and slope from a DEM, land surface temperature range from MODIS — on a common grid, and save as zarr. Coarse is correct here; you are ranking regions, not surveying sites.</div></div>
+      <div class="row"><div class="when">Day 1 morning</div><div class="what">Build the feature vector, normalise every dimension, implement weighted similarity with tests.</div></div>
+      <div class="row"><div class="when">Day 1 afternoon</div><div class="what">Globe or map with the similarity surface and a ranked list.</div></div>
+      <div class="row"><div class="when">Day 1 evening</div><div class="what">Per-criterion breakdown for the top results, and the weight sliders. Record by 18:30.</div></div>
+      <div class="row"><div class="when">Day 2 morning</div><div class="what">Target profiles for a second body, the rationale text, and the citation panel.</div></div>
+      <div class="row"><div class="when">Day 2 noon</div><div class="what">Freeze, record, submit.</div></div>
+    </div>
+    <div class="two">
+      <div class="box pre"><h4>Pre-build</h4><ul><li>Global predictor stack as zarr</li><li>Target profiles for two planetary sites</li><li>Normalisation ranges fixed</li></ul></div>
+      <div class="box cut"><h4>Cut in this order</h4><ul><li>Four criteria instead of eight</li><li>One target instead of several</li><li>Continental resolution instead of fine grid</li></ul></div>
+    </div>
+  </div>
+
+  <div class="panel" data-label="Data">
+    <ul>
+      <li><strong>NASA POWER</strong> — global climate normals, aridity and temperature range on a regular grid.</li>
+      <li><strong>DEM products through USGS or Earthdata</strong> — elevation, from which you derive slope and roughness.</li>
+      <li><strong>MODIS land surface temperature</strong> — diurnal range, which is the dimension that makes deserts and polar deserts behave like other worlds.</li>
+      <li><strong>Moon Trek, Mars Trek and PDS</strong> — the target-side characteristics for the planetary site you are matching.</li>
+    </ul>
+    <div class="code"><div class="cap">Similarity with visible weights — never a model's opinion</div><pre><code>import numpy as np
+
+CRITERIA = ["aridity", "temp_range_c", "elevation_m", "slope_deg",
+            "roughness", "lst_diurnal_c"]
+
+def similarity(earth_stack, target_vector, weights, ranges):
+    """Weighted normalised distance. Returns a 0-1 score per cell plus the
+    per-criterion contribution, so the interface can explain any result."""
+    contrib = {}
+    total = np.zeros(earth_stack[CRITERIA[0]].shape)
+    wsum = sum(weights[c] for c in CRITERIA)
+    for c in CRITERIA:
+        lo, hi = ranges[c]
+        d = np.abs(earth_stack[c] - target_vector[c]) / (hi - lo)
+        contrib[c] = np.clip(1 - d, 0, 1)
+        total += weights[c] * contrib[c]
+    return total / wsum, contrib</code></pre></div>
+  </div>
+
+  <div class="panel" data-label="Architecture">
+    <pre><code>POWER · DEM · MODIS LST ──► global predictor stack (zarr)
+                                      │
+Moon Trek / Mars Trek / PDS ──► target vector
+                                      │
+                                      ▼
+                        src/compute/similarity.py
+                   normalise · weight · score · rank
+                                      │
+                       ┌──────────────┼──────────────┐
+                       ▼              ▼              ▼
+                 globe surface   ranked list   per-criterion
+                                                breakdown
+                                      │
+                                      ▼
+                          weight sliders (live re-rank)</code></pre>
+  </div>
+
+  <div class="panel" data-label="Build prompt">
+    <div class="code"><div class="cap">Paste into your coding agent</div><pre><code>Build an Earth-analogue finder for Moon and Mars base locations.
+
+Data: a pre-cached global predictor stack in zarr on a coarse regular grid, with
+aridity, annual temperature range, elevation, slope, surface roughness and
+land-surface-temperature diurnal range. Target profiles in data/targets.json for
+at least the lunar south pole and Jezero Crater, each with a source_url.
+
+src/compute/similarity.py: normalise each criterion using fixed stored ranges,
+compute a weighted similarity score per grid cell, and return both the score
+surface and the per-criterion contribution. Unit-test that an exact match scores
+1.0 and that changing a weight changes the ranking as expected. No language
+model computes similarity.
+
+Frontend: a globe or world map shaded by similarity, a ranked list of the top
+twenty locations with their names, and a breakdown panel showing each
+criterion's contribution as a bar. A slider per criterion that re-ranks live.
+
+For each top result, a short rationale generated from the per-criterion numbers,
+naming which dimensions matched and which did not, with the target's source URL.
+
+Apache-2.0, public repo, README listing every layer and its source.</code></pre></div>
+  </div>
+</section>
+
+<!-- ============ CHALLENGE 11 ============ -->
+<section class="page" id="c11" data-nav="Martian Map" data-group="The 14 challenges" data-num="11">
+  <div class="chead"><div class="num">11</div><div class="txt">
+    <h2>Interplanetary Survival Guide: Martian Map</h2>
+    <div class="chips"><span class="chip">Mapping &amp; survival science</span><span class="chip int">Intermediate</span></div>
+  </div></div>
+  <div class="tabs" role="tablist"></div>
+
+  <div class="panel live" data-label="Brief">
+    <h3>What the challenge asks</h3>
+    <p>Interactive maps and survival tools for future Mars explorers.</p>
+    <h3>The build</h3>
+    <p>A traverse planner on real Mars terrain. Draw a route and the tool computes distance, slope profile, energy cost and the hazards along it, then produces a survival card: how long, how much power, where the safe stops are, and what to do if something fails.</p>
+    <div class="killer"><p class="k">Killer demo</p><p>Draw a line across Jezero. The elevation profile appears underneath with the steep sections marked in red, the energy estimate updates, and the route is rejected with a reason: one segment exceeds the rover slope limit. Redraw, and it passes.</p></div>
+    <h3>Where the points are</h3>
+    <p>Best Mission Concept is a global category and this challenge is aimed straight at it. Plausibility is the criterion, so state your rover's assumed mass, power and slope limit up front and derive everything from them.</p>
+  </div>
+
+  <div class="panel" data-label="48-hour plan">
+    <div class="plan">
+      <div class="row"><div class="when">Before the event</div><div class="what">Cache Mars Trek basemap tiles and a DEM subset for one region as a COG. One region done well beats the whole planet done thinly.</div></div>
+      <div class="row"><div class="when">Day 1 morning</div><div class="what">Terrain sampling along a drawn line, elevation profile, slope computation.</div></div>
+      <div class="row"><div class="when">Day 1 afternoon</div><div class="what">Energy and time model from stated rover parameters, and the slope-limit check.</div></div>
+      <div class="row"><div class="when">Day 1 evening</div><div class="what">The survival card and the hazard overlay. Record by 18:30.</div></div>
+      <div class="row"><div class="when">Day 2 morning</div><div class="what">Least-cost path suggestion between two points, and the contingency route.</div></div>
+      <div class="row"><div class="when">Day 2 noon</div><div class="what">Freeze, record, submit.</div></div>
+    </div>
+    <div class="two">
+      <div class="box pre"><h4>Pre-build</h4><ul><li>Mars Trek tiles as PMTiles</li><li>Regional DEM as COG</li><li>Rover parameter set agreed and documented</li></ul></div>
+      <div class="box cut"><h4>Cut in this order</h4><ul><li>Drawn routes only, drop automatic pathfinding</li><li>Drop the contingency route</li><li>Fixed demo route with a precomputed profile</li></ul></div>
+    </div>
+  </div>
+
+  <div class="panel" data-label="Data">
+    <ul>
+      <li><strong>NASA Mars Trek</strong> — imagery and elevation for the region you choose, as tiles and downloadable products.</li>
+      <li><strong>PDS Mars holdings</strong> — the authoritative archive behind those products, with citable identifiers.</li>
+      <li><strong>SpiceyPy</strong> — optional communications windows, computed from kernels, never estimated.</li>
+    </ul>
+    <div class="code"><div class="cap">Route cost from terrain — one function, all assumptions visible</div><pre><code>import numpy as np
+
+ROVER = {"mass_kg": 900, "slope_limit_deg": 20, "speed_m_s": 0.04,
+         "base_power_w": 120, "climb_cost_j_per_m_kg": 3.72}   # Mars gravity
+
+def route_profile(elevations_m, spacing_m, rover=ROVER):
+    dz = np.diff(elevations_m)
+    slope = np.degrees(np.arctan2(dz, spacing_m))
+    climb = dz[dz > 0].sum()
+    distance = spacing_m * len(dz)
+    time_s = distance / rover["speed_m_s"]
+    energy_j = (rover["base_power_w"] * time_s
+                + climb * rover["mass_kg"] * rover["climb_cost_j_per_m_kg"])
+    return {"distance_m": float(distance), "max_slope_deg": float(np.abs(slope).max()),
+            "total_climb_m": float(climb), "time_hours": float(time_s / 3600),
+            "energy_wh": float(energy_j / 3600),
+            "passes_slope_limit": bool(np.abs(slope).max() <= rover["slope_limit_deg"]),
+            "assumptions": rover}</code></pre></div>
+  </div>
+
+  <div class="panel" data-label="Architecture">
+    <pre><code>Mars Trek tiles ──► PMTiles       DEM ──► COG
+        │                              │
+        └───────────┬──────────────────┘
+                    ▼
+            MapLibre Mars map
+            draw a route
+                    │
+                    ▼
+        src/compute/route.py
+  sample terrain · slope · energy · time · limits
+                    │
+        ┌───────────┼───────────┐
+        ▼           ▼           ▼
+   elevation    survival     hazard
+    profile       card      overlay
+                    │
+                    ▼
+         contingency route (least cost)</code></pre>
+  </div>
+
+  <div class="panel" data-label="Build prompt">
+    <div class="code"><div class="cap">Paste into your coding agent</div><pre><code>Build a Mars traverse and survival planner for one region, default Jezero.
+
+Data: a local PMTiles basemap from NASA Mars Trek and a regional DEM as a COG in
+cache/mars/. All rendering and sampling is local.
+
+src/compute/route.py: sample elevation along a drawn polyline at a fixed
+spacing, compute the slope profile, total climb, distance, traverse time and
+energy in watt-hours from a documented rover parameter set, and a boolean for
+whether any segment exceeds the slope limit. Include a least-cost path between
+two points over the DEM using Dijkstra with a cost of distance plus a slope
+penalty. Unit-test on a synthetic ramp of known gradient.
+
+Frontend: MapLibre with a draw tool, an elevation profile beneath the map with
+over-limit segments highlighted, and a survival card showing distance, time,
+energy, maximum slope, pass or fail, and the assumptions used.
+
+If a route fails, say which segment failed and by how much, then offer a
+contingency route from the least-cost path.
+
+Every rover assumption is visible in the interface, not buried in code.
+Apache-2.0, public repo, Mars Trek and PDS cited.</code></pre></div>
+  </div>
+</section>
+
+<!-- ============ CHALLENGE 12 ============ -->
+<section class="page" id="c12" data-nav="Planet X and SPHEREx" data-group="The 14 challenges" data-num="12">
+  <div class="chead"><div class="num">12</div><div class="txt">
+    <h2>Planet X and SPHEREx</h2>
+    <div class="chips"><span class="chip">Astrophysics &amp; cosmology</span><span class="chip adv">Advanced</span></div>
+  </div></div>
+  <div class="tabs" role="tablist"></div>
+
+  <div class="panel live" data-label="Brief">
+    <h3>What the challenge asks</h3>
+    <p>Explore cosmic maps and astronomical data connected to NASA's SPHEREx mission, which is surveying the entire sky in 102 infrared wavelengths.</p>
+    <h3>The build</h3>
+    <p>A spectral sky explorer. Load a SPHEREx cutout, pick a source, and the tool extracts its spectrum across the survey's wavelength bands and matches it against catalogues — with a moving-object mode that compares epochs to surface anything that shifted between visits.</p>
+    <div class="killer"><p class="k">Killer demo</p><p>Click a point of light. A 102-band spectrum draws itself beside the image, and the catalogue match appears underneath with its identifier. This is the moment where an all-sky spectral survey stops being an abstraction.</p></div>
+    <h3>Where the points are</h3>
+    <p>Best Use of Data is a global category and this challenge is the natural fit. Cite the release DOI — QR2 is <code>10.26131/IRSA652</code>. Be careful with the word "discovery": show candidates and say they are candidates.</p>
+  </div>
+
+  <div class="panel" data-label="48-hour plan">
+    <div class="plan">
+      <div class="row"><div class="when">Before the event</div><div class="what">Pull several SPHEREx cutouts through IRSA or AWS, plus a catalogue subset for the same sky region. FITS files are large, so choose two or three regions and cache them properly.</div></div>
+      <div class="row"><div class="when">Day 1 morning</div><div class="what">FITS display in the browser and source extraction with photutils.</div></div>
+      <div class="row"><div class="when">Day 1 afternoon</div><div class="what">Spectrum extraction across bands and the spectral plot.</div></div>
+      <div class="row"><div class="when">Day 1 evening</div><div class="what">Catalogue cross-match with the identifier displayed. Record by 18:30.</div></div>
+      <div class="row"><div class="when">Day 2 morning</div><div class="what">Epoch comparison and the moving-object candidate list, with honest uncertainty.</div></div>
+      <div class="row"><div class="when">Day 2 noon</div><div class="what">Freeze, record, submit.</div></div>
+    </div>
+    <div class="two">
+      <div class="box pre"><h4>Pre-build</h4><ul><li>SPHEREx cutouts cached as FITS</li><li>Catalogue subset for the same region</li><li>Astropy and photutils installed and tested</li></ul></div>
+      <div class="box cut"><h4>Cut in this order</h4><ul><li>Drop the moving-object mode</li><li>One region, one spectrum, done well</li><li>Precomputed spectra instead of live extraction</li></ul></div>
+    </div>
+  </div>
+
+  <div class="panel" data-label="Data">
+    <ul>
+      <li><strong>SPHEREx through IRSA</strong> — public weekly releases since July 2025, searchable with SIA v2 through pyvo or astroquery. Current processing is QR2, DOI <code>10.26131/IRSA652</code>; QR1 was <code>10.26131/IRSA629</code>.</li>
+      <li><strong>SPHEREx on AWS Open Data</strong> — the same products without an authentication step, which is useful for bulk caching.</li>
+      <li><strong>NASA ADS</strong> — literature context for whatever you find, with a free bearer token.</li>
+      <li><strong>api.nasa.gov NeoWs</strong> — near-Earth object context for the solar-system side of the story.</li>
+    </ul>
+    <div class="code"><div class="cap">Extract a spectrum, honestly</div><pre><code>from astropy.io import fits
+import numpy as np
+
+def extract_spectrum(cutout_paths, x, y, aperture_px=3):
+    """One flux per band with its uncertainty. Bands with no coverage return
+    None rather than an interpolated guess."""
+    out = []
+    for path in cutout_paths:               # one file per wavelength band
+        with fits.open(path) as hdul:
+            data, hdr = hdul[0].data, hdul[0].header
+            yy, xx = np.ogrid[:data.shape[0], :data.shape[1]]
+            mask = (xx - x) ** 2 + (yy - y) ** 2 <= aperture_px ** 2
+            vals = data[mask]
+            good = np.isfinite(vals)
+            out.append({"wavelength_um": hdr.get("WAVELEN"),
+                        "flux": float(vals[good].sum()) if good.any() else None,
+                        "n_pixels": int(good.sum()),
+                        "file": path})
+    return out</code></pre></div>
+  </div>
+
+  <div class="panel" data-label="Architecture">
+    <pre><code>IRSA SIA / AWS ──► SPHEREx cutouts (FITS, cached)
+                          │
+                          ▼
+              astropy + photutils
+        source extraction · aperture photometry
+                          │
+            ┌─────────────┼─────────────┐
+            ▼             ▼             ▼
+      FITS viewer    spectrum      epoch compare
+      (JS9/Aladin)   102 bands     candidate motion
+                          │
+                          ▼
+              catalogue cross-match
+             identifier + ADS context
+                          │
+                          ▼
+            citation: DOI 10.26131/IRSA652</code></pre>
+  </div>
+
+  <div class="panel" data-label="Build prompt">
+    <div class="code"><div class="cap">Paste into your coding agent</div><pre><code>Build a SPHEREx spectral sky explorer.
+
+Data: pre-cached SPHEREx cutouts as FITS in cache/spherex/, one file per
+wavelength band for two or three sky regions, plus a catalogue subset for the
+same regions. Record the release version and DOI in the repo.
+
+Backend: astropy and photutils. Source detection on a chosen band, aperture
+photometry across every band to build a spectrum, and a cross-match against the
+cached catalogue returning the matched identifier and separation in arcseconds.
+
+Bands without coverage return null, never an interpolated value.
+
+Frontend: a FITS image viewer with a band selector, click a source to draw its
+spectrum as flux against wavelength with error bars, and a match panel showing
+the catalogue identifier, separation, and a link to ADS.
+
+Moving-object mode: load two epochs of the same region, align them, difference
+them, and list sources whose position changed by more than a stated threshold.
+Label these as candidates, show the measured motion, and never call anything a
+discovery.
+
+Cite the SPHEREx release DOI 10.26131/IRSA652 in the interface and the README.
+Apache-2.0, public repo.</code></pre></div>
+  </div>
+</section>
+
+<!-- ============ CHALLENGE 13 ============ -->
+<section class="page" id="c13" data-nav="Space Mission Design Game" data-group="The 14 challenges" data-num="13">
+  <div class="chead"><div class="num">13</div><div class="txt">
+    <h2>Space Mission Design Game</h2>
+    <div class="chips"><span class="chip">Game development &amp; engineering</span><span class="chip int">Intermediate</span><span class="chip beg">Youth</span></div>
+  </div></div>
+  <div class="tabs" role="tablist"></div>
+
+  <div class="panel live" data-label="Brief">
+    <h3>What the challenge asks</h3>
+    <p>An educational game about planning, engineering and executing a space mission.</p>
+    <h3>The build</h3>
+    <p>A mission design game where every choice costs something real. Pick a destination, a launch vehicle, instruments and a power system inside a mass, delta-v and budget envelope — and the game computes whether the design closes, then flies it and tells you what broke.</p>
+    <div class="killer"><p class="k">Killer demo</p><p>Add one more instrument. The mass budget goes red, the delta-v margin drops below zero, and the game says the launch vehicle can no longer deliver the spacecraft to the target. Remove the instrument and it closes with 4 percent margin. Engineering trade-offs become visible in two clicks.</p></div>
+    <h3>Where the points are</h3>
+    <p>Creativity and User experience, with Validity earned by using real numbers. Real launch vehicle capacities and real instrument masses from NASA references turn a toy into a teaching tool, and they cost nothing but an afternoon of research done in advance.</p>
+  </div>
+
+  <div class="panel" data-label="48-hour plan">
+    <div class="plan">
+      <div class="row"><div class="when">Before the event</div><div class="what">Compile the reference tables: launch vehicle capacity by destination, instrument masses and power draws, delta-v requirements between bodies, rough cost figures. Cite each row. This is the whole foundation.</div></div>
+      <div class="row"><div class="when">Day 1 morning</div><div class="what">The budget engine — mass, power, delta-v, cost — with tests. Make it impossible to cheat.</div></div>
+      <div class="row"><div class="when">Day 1 afternoon</div><div class="what">The design interface with live margins that go red when a budget breaks.</div></div>
+      <div class="row"><div class="when">Day 1 evening</div><div class="what">The flight simulation and the outcome report. Record by 18:30.</div></div>
+      <div class="row"><div class="when">Day 2 morning</div><div class="what">Three scenarios, scoring, and a post-mission explanation of what would have fixed it.</div></div>
+      <div class="row"><div class="when">Day 2 noon</div><div class="what">Freeze, record, submit.</div></div>
+    </div>
+    <div class="two">
+      <div class="box pre"><h4>Pre-build</h4><ul><li>Reference tables with citations</li><li>Delta-v map between bodies</li><li>Three scenario briefs written</li></ul></div>
+      <div class="box cut"><h4>Cut in this order</h4><ul><li>One scenario instead of three</li><li>Drop the flight animation, keep the report</li><li>Fixed instrument set, choose only the vehicle</li></ul></div>
+    </div>
+  </div>
+
+  <div class="panel" data-label="Data">
+    <ul>
+      <li><strong>NTRS</strong> — systems engineering references, launch vehicle performance and instrument specifications, all citable.</li>
+      <li><strong>api.nasa.gov and NASA mission pages</strong> — real mission parameters to anchor each scenario.</li>
+      <li><strong>SpiceyPy</strong> — optional: compute a real transfer geometry for the chosen launch date instead of a lookup table.</li>
+    </ul>
+    <div class="code"><div class="cap">The budget engine — the game's entire honesty</div><pre><code>def close_design(design, refs):
+    """Does the design close? Returns every margin, not a verdict alone."""
+    dry = sum(i["mass_kg"] for i in design["instruments"]) + design["bus_mass_kg"]
+    prop = design["propellant_kg"]
+    wet = dry + prop
+    capacity = refs["vehicles"][design["vehicle"]]["capacity_kg"][design["destination"]]
+
+    # Tsiolkovsky, with the stated engine
+    import math
+    isp = refs["engines"][design["engine"]]["isp_s"]
+    dv_available = isp * 9.80665 * math.log(wet / dry)
+    dv_required = refs["dv_map"][design["destination"]]
+
+    power_need = sum(i["power_w"] for i in design["instruments"])
+    power_have = design["solar_array_w"] * refs["solar_flux_factor"][design["destination"]]
+
+    return {
+      "mass": {"wet_kg": wet, "capacity_kg": capacity,
+               "margin_pct": 100 * (capacity - wet) / capacity},
+      "delta_v": {"available_m_s": dv_available, "required_m_s": dv_required,
+                  "margin_pct": 100 * (dv_available - dv_required) / dv_required},
+      "power": {"need_w": power_need, "have_w": power_have,
+                "margin_pct": 100 * (power_have - power_need) / power_need},
+      "cost": {"total_musd": design["cost_musd"], "cap_musd": design["budget_musd"]},
+      "closes": all([wet <= capacity, dv_available >= dv_required,
+                     power_have >= power_need,
+                     design["cost_musd"] <= design["budget_musd"]])
+    }</code></pre></div>
+  </div>
+
+  <div class="panel" data-label="Architecture">
+    <pre><code>reference tables (cited)
+  vehicles · instruments · dv map · engines
+                │
+                ▼
+      src/compute/budget.py
+   mass · delta-v · power · cost margins
+                │
+                ▼
+        design interface
+   live margin bars, red when broken
+                │
+                ▼
+      flight simulation
+   staged events, failures from margins
+                │
+                ▼
+    post-mission report
+  what broke, and what would have fixed it</code></pre>
+  </div>
+
+  <div class="panel" data-label="Build prompt">
+    <div class="code"><div class="cap">Paste into your coding agent</div><pre><code>Build an educational space mission design game.
+
+Reference data in data/refs.json: launch vehicles with capacity by destination,
+engines with specific impulse, instruments with mass, power and science value, a
+delta-v map between bodies, and a source_url for every row.
+
+src/compute/budget.py: compute the wet and dry mass, available delta-v using the
+rocket equation with the chosen engine, required delta-v for the destination,
+power available against power needed with a solar-distance factor, and cost
+against the budget cap. Return every margin as a percentage plus a single
+"closes" boolean. Unit-test against a design known to close and one known to
+fail on each budget in turn.
+
+Game: choose destination, vehicle, engine, instruments, power system and
+propellant load. Margin bars update on every change and turn red when a budget
+breaks, with a message naming which one. When the design closes, run a staged
+flight simulation whose failure probabilities are derived from the margins, and
+produce a report saying what happened and which single change would most improve
+it.
+
+Three scenarios of increasing difficulty. A score combining science value,
+margin and cost efficiency.
+
+Every reference number is traceable to its source in an about screen.
+Apache-2.0, public repo.</code></pre></div>
+  </div>
+</section>
+
+<!-- ============ CHALLENGE 14 ============ -->
+<section class="page" id="c14" data-nav="Earth Information Jukebox" data-group="The 14 challenges" data-num="14">
+  <div class="chead"><div class="num">14</div><div class="txt">
+    <h2>The Earth Information Jukebox</h2>
+    <div class="chips"><span class="chip">Audio &amp; multimodal Earth data</span><span class="chip int">Intermediate</span><span class="chip beg">Youth</span></div>
+  </div></div>
+  <div class="tabs" role="tablist"></div>
+
+  <div class="panel live" data-label="Brief">
+    <h3>What the challenge asks</h3>
+    <p>Turn Earth-observation and climate data into interactive audio. Sonification is not decoration — for a blind user it is the only way in, and for everyone else it finds patterns the eye skips over.</p>
+    <h3>The build</h3>
+    <p>A jukebox of Earth data. Choose a variable and a place, and decades of NASA observations play as sound with a defensible mapping: value to pitch, variability to timbre, seasonality to rhythm. Layer several variables and Bangladesh's climate record becomes an ensemble.</p>
+    <div class="killer"><p class="k">Killer demo</p><p>Play Bangladesh 1985, then 2025, back to back. The pitch is audibly higher and the rhythm is audibly more erratic. Nobody needs the chart explained after that.</p></div>
+    <h3>Where the points are</h3>
+    <p>Presentation, and the Art and Technology category globally. The risk is arbitrariness, so state the mapping explicitly — which value maps to which frequency, over which range — and let the listener see the chart scrub in time with the sound. Accessibility is the argument that makes this more than a gimmick: captions, a described-audio mode and keyboard control belong in the build, not in the write-up.</p>
+  </div>
+
+  <div class="panel" data-label="48-hour plan">
+    <div class="plan">
+      <div class="row"><div class="when">Before the event</div><div class="what">Cache long POWER series for several locations and variables, and precompute the normalised arrays the audio engine will read. Audio must never wait on a fetch.</div></div>
+      <div class="row"><div class="when">Day 1 morning</div><div class="what">Web Audio engine with one variable playing and a chart cursor moving in time with it.</div></div>
+      <div class="row"><div class="when">Day 1 afternoon</div><div class="what">The mapping panel, with ranges shown, and the second and third variables layered.</div></div>
+      <div class="row"><div class="when">Day 1 evening</div><div class="what">Decade A/B comparison and the export. Record by 18:30 — and mind the audio levels in the recording.</div></div>
+      <div class="row"><div class="when">Day 2 morning</div><div class="what">Accessibility: captions, described mode, keyboard control, reduced motion. Test with the screen off.</div></div>
+      <div class="row"><div class="when">Day 2 noon</div><div class="what">Freeze, record, submit.</div></div>
+    </div>
+    <div class="two">
+      <div class="box pre"><h4>Pre-build</h4><ul><li>Normalised series as JSON in the web folder</li><li>Mapping ranges chosen and documented</li><li>Audio tested on a laptop speaker, not headphones</li></ul></div>
+      <div class="box cut"><h4>Cut in this order</h4><ul><li>Two variables instead of six</li><li>Drop the globe, keep the chart</li><li>Drop export, keep playback</li></ul></div>
+    </div>
+  </div>
+
+  <div class="panel" data-label="Data">
+    <ul>
+      <li><strong>NASA POWER</strong> — decades of daily temperature, rainfall and solar radiation for any point. Small files, no key, perfect for audio.</li>
+      <li><strong>MODIS or VIIRS NDVI</strong> — vegetation as a slower, seasonal voice.</li>
+      <li><strong>FIRMS</strong> — fire counts as percussion, which is genuinely the right mapping for a sparse event series.</li>
+      <li><strong>GRACE and GRACE-FO</strong> — water storage as a bass line beneath everything else.</li>
+    </ul>
+    <div class="code"><div class="cap">A mapping you can defend</div><pre><code>// Value to pitch across a stated range. Linear in value, exponential in
+// frequency, because pitch perception is logarithmic.
+const MAPPING = {
+  T2M:        { lo: 10, hi: 40, fLo: 220, fHi: 880, voice: 'sine',
+                label: 'Temperature 10-40C maps to 220-880Hz' },
+  PRECTOTCORR:{ lo: 0,  hi: 60, param: 'rhythm',
+                label: 'Daily rainfall 0-60mm maps to note density' }
+};
+
+function toFreq(value, m) {
+  const t = Math.min(1, Math.max(0, (value - m.lo) / (m.hi - m.lo)));
+  return m.fLo * Math.pow(m.fHi / m.fLo, t);   // equal musical steps
+}</code></pre></div>
+    <div class="note"><p><b>Show the mapping on screen.</b> A sonification whose rules are visible is science communication. One whose rules are hidden is a sound effect — and that difference is worth ten points on validity.</p></div>
+  </div>
+
+  <div class="panel" data-label="Architecture">
+    <pre><code>POWER · NDVI · FIRMS · GRACE
+          │ (pre-event)
+          ▼
+ normalised series JSON in web/public
+          │
+          ▼
+   Web Audio engine
+  pitch · rhythm · timbre · gain
+          │
+  ┌───────┼────────┬──────────┐
+  ▼       ▼        ▼          ▼
+chart   mapping  A/B decade  captions
+cursor   panel   compare    + described
+                              mode</code></pre>
+    <p>No backend at all. Static files plus Web Audio, which means it works offline, on a phone, and in a browser with no internet.</p>
+  </div>
+
+  <div class="panel" data-label="Build prompt">
+    <div class="code"><div class="cap">Paste into your coding agent</div><pre><code>Build a browser sonification jukebox for NASA Earth data.
+
+Data: precomputed normalised series as JSON in web/public, one file per variable
+per location, generated before the event from NASA POWER, NDVI, FIRMS and GRACE.
+No network calls at runtime.
+
+Audio: Web Audio API. Map temperature to pitch across a stated frequency range,
+rainfall to note density, vegetation to a sustained harmonic voice, fire counts
+to percussion, and water storage to a bass tone. Every mapping is defined in one
+MAPPING object and rendered as human-readable text in the interface.
+
+Playback: a transport with play, pause and speed; a time-series chart whose
+cursor moves in sync with the audio; a layer mixer with a mute and gain control
+per variable; and an A/B mode that plays two decades back to back.
+
+Accessibility is a requirement, not an extra: live text captions describing what
+is being heard, a described-audio mode that speaks the value at each year
+boundary, full keyboard control, visible focus, and prefers-reduced-motion
+respected. The experience must be usable with the screen off and usable with the
+sound off.
+
+Show the mapping rules and the data source for every variable on screen.
+Apache-2.0, public repo, POWER and every other dataset cited with its URL.</code></pre></div>
+  </div>
+</section>
+
+  </main>
+</div>
+
+<footer class="foot"><div class="in">
+  <p>Build guide for the NASA International Space Apps Challenge 2026, Bangladesh Local Events. Companion to the Participants Guide. Dataset recommendations are ours, not NASA's, until full challenge statements publish on 28 October 2026 — verify everything at spaceappschallenge.org before you rely on it.</p>
+  <p>Theme artwork and the Space Apps name belong to the NASA Space Apps Challenge. NASA does not endorse this guide.</p>
+</div></footer>
+
+<script>
+(function () {
+  var pages = Array.prototype.slice.call(document.querySelectorAll('.page'));
+  var rail = document.getElementById('rail');
+  var jump = document.getElementById('jump');
+  var groups = [];
+
+  pages.forEach(function (p) {
+    var g = p.dataset.group || 'Sections';
+    var found = groups.filter(function (x) { return x.name === g; })[0];
+    if (!found) { found = { name: g, items: [] }; groups.push(found); }
+    found.items.push(p);
+  });
+
+  groups.forEach(function (g) {
+    var h = document.createElement('h4'); h.textContent = g.name; rail.appendChild(h);
+    var og = document.createElement('optgroup'); og.label = g.name;
+    g.items.forEach(function (p) {
+      var a = document.createElement('a');
+      a.href = '#' + p.id;
+      a.dataset.target = p.id;
+      if (p.dataset.num) {
+        var n = document.createElement('span'); n.className = 'n'; n.textContent = p.dataset.num;
+        a.appendChild(n);
+      }
+      a.appendChild(document.createTextNode(p.dataset.nav));
+      rail.appendChild(a);
+      var o = document.createElement('option');
+      o.value = p.id;
+      o.textContent = (p.dataset.num ? p.dataset.num + '. ' : '') + p.dataset.nav;
+      og.appendChild(o);
+    });
+    jump.appendChild(og);
+  });
+
+  // build the inner tab bars from each panel's label
+  pages.forEach(function (p) {
+    var bar = p.querySelector('.tabs');
+    if (!bar) return;
+    var panels = Array.prototype.slice.call(p.querySelectorAll('.panel'));
+    panels.forEach(function (panel, i) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.setAttribute('role', 'tab');
+      b.setAttribute('aria-selected', i === 0 ? 'true' : 'false');
+      b.textContent = panel.dataset.label;
+      b.addEventListener('click', function () {
+        panels.forEach(function (x) { x.classList.remove('live'); });
+        bar.querySelectorAll('button').forEach(function (x) { x.setAttribute('aria-selected', 'false'); });
+        panel.classList.add('live');
+        b.setAttribute('aria-selected', 'true');
+      });
+      bar.appendChild(b);
+    });
+  });
+
+  function show(id, push) {
+    var page = document.getElementById(id) || pages[0];
+    pages.forEach(function (p) { p.classList.remove('live'); });
+    page.classList.add('live');
+    rail.querySelectorAll('a').forEach(function (a) {
+      a.classList.toggle('on', a.dataset.target === page.id);
+    });
+    jump.value = page.id;
+    // Sandboxed preview frames (about:srcdoc) forbid history writes. Deep links
+    // still work wherever they are allowed; elsewhere navigation just proceeds.
+    if (push) {
+      try {
+        if (location.hash !== '#' + page.id) history.replaceState(null, '', '#' + page.id);
+      } catch (e) { /* no history access here */ }
+    }
+    try { window.scrollTo(0, 0); } catch (e) { /* ignore */ }
+  }
+
+  rail.addEventListener('click', function (e) {
+    var a = e.target.closest('a');
+    if (!a) return;
+    e.preventDefault();
+    show(a.dataset.target, true);
+  });
+  jump.addEventListener('change', function () { show(jump.value, true); });
+  window.addEventListener('hashchange', function () { show(location.hash.slice(1), false); });
+  var startId = '';
+  try { startId = (location.hash || '').slice(1); } catch (e) { startId = ''; }
+  show(document.getElementById(startId) ? startId : 'brief', false);
+
+  // copy buttons
+  document.querySelectorAll('.code').forEach(function (block) {
+    var pre = block.querySelector('pre');
+    if (!pre) return;
+    var b = document.createElement('button');
+    b.type = 'button'; b.className = 'copy'; b.textContent = 'Copy';
+    b.addEventListener('click', function () {
+      var text = pre.innerText;
+      var done = function () {
+        b.textContent = 'Copied'; b.classList.add('done');
+        setTimeout(function () { b.textContent = 'Copy'; b.classList.remove('done'); }, 1600);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done, function () { b.textContent = 'Select and copy'; });
+      } else {
+        var ta = document.createElement('textarea');
+        ta.value = text; document.body.appendChild(ta); ta.select();
+        try { document.execCommand('copy'); done(); } catch (e) { b.textContent = 'Select and copy'; }
+        document.body.removeChild(ta);
+      }
+    });
+    block.appendChild(b);
+  });
+
+  // theme toggle
+  var themer = document.getElementById('themer');
+  var root = document.documentElement;
+  var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  root.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+  function syncLabel() { themer.textContent = root.getAttribute('data-theme') === 'dark' ? 'Light' : 'Dark'; }
+  syncLabel();
+  themer.addEventListener('click', function () {
+    root.setAttribute('data-theme', root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+    syncLabel();
+  });
+
+  // countdown to day one, 07:00 Asia/Dhaka, Friday 13 November 2026
+  var target = new Date('2026-11-13T07:00:00+06:00').getTime();
+  var el = { d: document.getElementById('d'), h: document.getElementById('h'),
+             m: document.getElementById('m'), s: document.getElementById('s') };
+  function tick() {
+    var left = target - Date.now();
+    if (left <= 0) {
+      document.getElementById('cnote').textContent = 'The hackathon has started. Go build.';
+      el.d.textContent = el.h.textContent = el.m.textContent = el.s.textContent = '0';
+      return;
+    }
+    var s = Math.floor(left / 1000);
+    el.d.textContent = Math.floor(s / 86400);
+    el.h.textContent = String(Math.floor(s % 86400 / 3600)).padStart(2, '0');
+    el.m.textContent = String(Math.floor(s % 3600 / 60)).padStart(2, '0');
+    el.s.textContent = String(s % 60).padStart(2, '0');
+    setTimeout(tick, 1000);
+  }
+  tick();
+})();
+</script>
+</body>
+</html>
