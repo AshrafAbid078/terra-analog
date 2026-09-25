@@ -16,3 +16,6 @@ dist/
 # Data (Explicitly gitignored per structure.md and plan.md)
 data/raw/
 cache/
+
+# Local Guides
+space-apps-2026-build-guide.html
